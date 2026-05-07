@@ -1,0 +1,360 @@
+import face_recognition
+import numpy as np
+import os
+from flask import Flask
+import cv2
+
+app = Flask(__name__)
+
+# Load OpenCV face detector
+face_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+)
+
+# =========================
+# LOAD KNOWN FACES
+# =========================
+known_face_encodings = []
+known_face_names = []
+
+
+def load_known_faces():
+
+    dataset_path = "dataset"
+
+    if not os.path.exists(dataset_path):
+        return
+
+    for filename in os.listdir(dataset_path):
+
+        if filename.endswith(".jpg"):
+
+            image_path = os.path.join(dataset_path, filename)
+
+            image = face_recognition.load_image_file(image_path)
+
+            encodings = face_recognition.face_encodings(image)
+
+            if len(encodings) > 0:
+
+                encoding = encodings[0]
+
+                known_face_encodings.append(encoding)
+
+                name = os.path.splitext(filename)[0]
+
+                known_face_names.append(name)
+
+                print(f"Loaded face: {name}")
+
+
+@app.route("/")
+def home():
+    return "AI Face Recognition Service Running"
+
+
+# =========================
+# FACE DETECTION API
+# =========================
+@app.route("/detect")
+def detect():
+
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+    if not cap.isOpened():
+        return "Camera not detected"
+
+    cv2.namedWindow("Face Detection", cv2.WINDOW_NORMAL)
+
+    cv2.resizeWindow("Face Detection", 900, 700)
+
+    cv2.setWindowProperty(
+        "Face Detection",
+        cv2.WND_PROP_TOPMOST,
+        1
+    )
+
+    while True:
+
+        ret, frame = cap.read()
+
+        if not ret:
+            break
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        faces = face_cascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30)
+        )
+
+        # Draw rectangles
+        for (x, y, w, h) in faces:
+
+            cv2.rectangle(
+                frame,
+                (x, y),
+                (x + w, y + h),
+                (0, 255, 0),
+                2
+            )
+
+        cv2.imshow("Face Detection", frame)
+
+        key = cv2.waitKey(1) & 0xFF
+
+        # Close on Q
+        if key == ord('q'):
+            break
+
+        # Close on ESC
+        if key == 27:
+            break
+
+        # Detect manual close
+        if cv2.getWindowProperty(
+            "Face Detection",
+            cv2.WND_PROP_VISIBLE
+        ) < 1:
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    return "Face Detection Closed Successfully"
+
+
+# =========================
+# FACE REGISTRATION API
+# =========================
+@app.route("/register/<name>")
+def register(name):
+
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+    if not cap.isOpened():
+        return "Camera not detected"
+
+    cv2.namedWindow("Register Face", cv2.WINDOW_NORMAL)
+
+    cv2.resizeWindow("Register Face", 900, 700)
+
+    cv2.setWindowProperty(
+        "Register Face",
+        cv2.WND_PROP_TOPMOST,
+        1
+    )
+
+    while True:
+
+        ret, frame = cap.read()
+
+        if not ret:
+            break
+
+        # Clean frame copy
+        clean_frame = frame.copy()
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        faces = face_cascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30)
+        )
+
+        # Draw rectangles only for display
+        for (x, y, w, h) in faces:
+
+            cv2.rectangle(
+                frame,
+                (x, y),
+                (x + w, y + h),
+                (0, 255, 0),
+                2
+            )
+
+        cv2.imshow("Register Face", frame)
+
+        key = cv2.waitKey(1) & 0xFF
+
+        # Press S to save image
+        if key == ord('s'):
+
+            os.makedirs("dataset", exist_ok=True)
+
+            filepath = f"dataset/{name}.jpg"
+
+            # Save clean image
+            cv2.imwrite(filepath, clean_frame)
+
+            cap.release()
+            cv2.destroyAllWindows()
+
+            return f"Face registered successfully as {name}"
+
+        # Press Q to quit
+        if key == ord('q'):
+            break
+
+        # Press ESC to quit
+        if key == 27:
+            break
+
+        # Detect manual close
+        if cv2.getWindowProperty(
+            "Register Face",
+            cv2.WND_PROP_VISIBLE
+        ) < 1:
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    return "Registration cancelled"
+
+
+# =========================
+# REAL FACE RECOGNITION
+# =========================
+@app.route("/recognize")
+def recognize():
+
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+    if not cap.isOpened():
+        return "Camera not detected"
+
+    cv2.namedWindow("Face Recognition", cv2.WINDOW_NORMAL)
+
+    cv2.resizeWindow("Face Recognition", 900, 700)
+
+    cv2.setWindowProperty(
+        "Face Recognition",
+        cv2.WND_PROP_TOPMOST,
+        1
+    )
+
+    while True:
+
+        ret, frame = cap.read()
+
+        if not ret:
+            break
+
+        # =========================
+        # PERFORMANCE OPTIMIZATION
+        # =========================
+
+        # Resize frame for faster processing
+        small_frame = cv2.resize(
+            frame,
+            (0, 0),
+            fx=0.25,
+            fy=0.25
+        )
+
+        # Convert BGR to RGB
+        rgb_small_frame = cv2.cvtColor(
+            small_frame,
+            cv2.COLOR_BGR2RGB
+        )
+
+        # Detect face locations
+        face_locations = face_recognition.face_locations(
+            rgb_small_frame
+        )
+
+        # Generate encodings
+        face_encodings = face_recognition.face_encodings(
+            rgb_small_frame,
+            face_locations
+        )
+
+        for (top, right, bottom, left), face_encoding in zip(
+            face_locations,
+            face_encodings
+        ):
+
+            # Scale back coordinates
+            top *= 4
+            right *= 4
+            bottom *= 4
+            left *= 4
+
+            matches = face_recognition.compare_faces(
+                known_face_encodings,
+                face_encoding
+            )
+
+            name = "Unknown"
+
+            face_distances = face_recognition.face_distance(
+                known_face_encodings,
+                face_encoding
+            )
+
+            if len(face_distances) > 0:
+
+                best_match_index = np.argmin(face_distances)
+
+                if matches[best_match_index]:
+
+                    name = known_face_names[best_match_index]
+
+            # Draw rectangle
+            cv2.rectangle(
+                frame,
+                (left, top),
+                (right, bottom),
+                (0, 255, 0),
+                2
+            )
+
+            # Draw detected name
+            cv2.putText(
+                frame,
+                name,
+                (left, top - 10),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.9,
+                (0, 255, 0),
+                2
+            )
+
+        cv2.imshow("Face Recognition", frame)
+
+        key = cv2.waitKey(1) & 0xFF
+
+        # Close on Q
+        if key == ord('q'):
+            break
+
+        # Close on ESC
+        if key == 27:
+            break
+
+        # Detect manual close
+        if cv2.getWindowProperty(
+            "Face Recognition",
+            cv2.WND_PROP_VISIBLE
+        ) < 1:
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    return "Face Recognition Closed"
+
+
+# =========================
+# START APPLICATION
+# =========================
+if __name__ == "__main__":
+
+    load_known_faces()
+
+    app.run(debug=True)
