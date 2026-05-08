@@ -20,6 +20,36 @@ public class StudentController {
     private StudentRepository studentRepository;
 
     // =========================
+    // HOME API
+    // =========================
+    @GetMapping("/")
+    public String home() {
+
+        return "AI Attendance System Running";
+    }
+
+    // =========================
+    // SIGNUP API
+    // =========================
+    @PostMapping("/signup")
+    public Object signup(
+            @RequestBody Student student
+    ) {
+
+        Student existingStudent =
+                studentRepository.findByRegistrationNumber(
+                        student.getRegistrationNumber()
+                );
+
+        if (existingStudent != null) {
+
+            return "Registration number already exists";
+        }
+
+        return studentRepository.save(student);
+    }
+
+    // =========================
     // ADD STUDENT
     // =========================
     @PostMapping
