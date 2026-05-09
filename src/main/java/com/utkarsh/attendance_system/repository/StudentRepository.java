@@ -9,4 +9,9 @@ public interface StudentRepository
     Student findByRegistrationNumber(
             String registrationNumber
     );
+
+    Student findByRegistrationNumberAndPassword(
+            String registrationNumber,
+            String password
+    );
 }
