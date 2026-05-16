@@ -40,6 +40,10 @@ known_face_names = []
 
 def load_known_faces():
 
+    known_face_encodings.clear()
+
+    known_face_names.clear()
+
     dataset_path = "dataset"
 
     if not os.path.exists(dataset_path):
@@ -88,6 +92,12 @@ def load_known_faces():
 
                 print(
                     f"Loaded face: {name}"
+                )
+
+            else:
+
+                print(
+                    f"No face found in: {filename}"
                 )
 
 
@@ -146,16 +156,190 @@ def register_face():
 
             f.write(image_bytes)
 
+        # Reload dataset
+        load_known_faces()
+
         return jsonify({
 
             "message":
-
-            "Face Registered "
-            "Successfully",
+            "Face Registered Successfully",
 
             "imagePath":
-
             image_path
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error": str(e)
+
+        })
+
+
+# =========================
+# API FACE RECOGNITION
+# =========================
+
+@app.route(
+    '/recognize-face',
+    methods=['POST']
+)
+def recognize_face_api():
+
+    try:
+
+        data = request.json
+
+        image_data = data['image']
+
+        image_data = (
+            image_data.split(",")[1]
+        )
+
+        image_bytes = (
+            base64.b64decode(
+                image_data
+            )
+        )
+
+        temp_path = "temp.png"
+
+        with open(
+            temp_path,
+            "wb"
+        ) as f:
+
+            f.write(image_bytes)
+
+        unknown_image = (
+            face_recognition
+            .load_image_file(
+                temp_path
+            )
+        )
+
+        unknown_encodings = (
+            face_recognition
+            .face_encodings(
+                unknown_image
+            )
+        )
+
+        if len(unknown_encodings) == 0:
+
+            return jsonify({
+
+                "matched": False,
+
+                "message":
+                "No Face Found"
+
+            })
+
+        unknown_encoding = (
+            unknown_encodings[0]
+        )
+
+        if len(known_face_encodings) == 0:
+
+            return jsonify({
+
+                "matched": False,
+
+                "message":
+                "No Registered Faces"
+
+            })
+
+        # =========================
+        # FACE MATCHING
+        # =========================
+
+        matches = (
+            face_recognition
+            .compare_faces(
+
+                known_face_encodings,
+
+                unknown_encoding,
+
+                tolerance=0.65
+            )
+        )
+
+        face_distances = (
+            face_recognition
+            .face_distance(
+
+                known_face_encodings,
+
+                unknown_encoding
+            )
+        )
+
+        print(
+            "Face Distances:",
+            face_distances
+        )
+
+        best_match_index = (
+            np.argmin(
+                face_distances
+            )
+        )
+
+        print(
+            "Best Match Index:",
+            best_match_index
+        )
+
+        print(
+            "Matched Student:",
+            known_face_names[
+                best_match_index
+            ]
+        )
+
+        # =========================
+        # MATCH FOUND
+        # =========================
+
+        if (
+
+            matches[
+                best_match_index
+            ]
+
+            or
+
+            face_distances[
+                best_match_index
+            ] < 0.65
+        ):
+
+            name = (
+                known_face_names[
+                    best_match_index
+                ]
+            )
+
+            return jsonify({
+
+                "matched": True,
+
+                "registrationNumber":
+                name
+
+            })
+
+        return jsonify({
+
+            "matched": False,
+
+            "message":
+            "Face Not Recognized"
 
         })
 
@@ -279,8 +463,7 @@ def detect():
     cv2.destroyAllWindows()
 
     return (
-        "Face Detection "
-        "Closed Successfully"
+        "Face Detection Closed Successfully"
     )
 
 
@@ -391,13 +574,14 @@ def register(name):
                 clean_frame
             )
 
+            load_known_faces()
+
             cap.release()
 
             cv2.destroyAllWindows()
 
             return (
-                f"Face registered "
-                f"successfully as {name}"
+                f"Face registered successfully as {name}"
             )
 
         if key == ord('q'):
@@ -535,7 +719,9 @@ def recognize():
 
                     known_face_encodings,
 
-                    face_encoding
+                    face_encoding,
+
+                    tolerance=0.65
                 )
             )
 
@@ -560,9 +746,17 @@ def recognize():
                     )
                 )
 
-                if matches[
-                    best_match_index
-                ]:
+                if (
+                    matches[
+                        best_match_index
+                    ]
+
+                    or
+
+                    face_distances[
+                        best_match_index
+                    ] < 0.65
+                ):
 
                     name = (
                         known_face_names[

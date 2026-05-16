@@ -16,10 +16,12 @@ function App() {
     setRegistrationNumber]
     = useState("");
 
-  const [password, setPassword]
+  const [password,
+    setPassword]
     = useState("");
 
-  const [message, setMessage]
+  const [message,
+    setMessage]
     = useState("");
 
   const [loggedInStudent,
@@ -46,7 +48,8 @@ function App() {
   // =========================
 
   const [students,
-    setStudents] = useState([]);
+    setStudents]
+    = useState([]);
 
   // =========================
   // CAMERA STATES
@@ -64,7 +67,8 @@ function App() {
   // VIDEO REF
   // =========================
 
-  const videoRef = useRef(null);
+  const videoRef =
+    useRef(null);
 
   // =========================
   // FETCH STUDENTS
@@ -73,12 +77,16 @@ function App() {
   useEffect(() => {
 
     const storedStudent =
-      localStorage.getItem("student");
+      localStorage.getItem(
+        "student"
+      );
 
     if (storedStudent) {
 
       setLoggedInStudent(
-        JSON.parse(storedStudent)
+        JSON.parse(
+          storedStudent
+        )
       );
     }
 
@@ -95,7 +103,9 @@ function App() {
           "http://localhost:8082/students"
         );
 
-      setStudents(response.data);
+      setStudents(
+        response.data
+      );
 
     } catch (error) {
 
@@ -167,7 +177,9 @@ function App() {
           signupData
         );
 
-      console.log(response.data);
+      console.log(
+        response.data
+      );
 
       setMessage(
         "Signup Successful"
@@ -205,9 +217,13 @@ function App() {
       "student"
     );
 
-    setLoggedInStudent(null);
+    setLoggedInStudent(
+      null
+    );
 
-    setMessage("Logged Out");
+    setMessage(
+      "Logged Out"
+    );
   };
 
   // =========================
@@ -229,7 +245,9 @@ function App() {
 
       setTimeout(() => {
 
-        if (videoRef.current) {
+        if (
+          videoRef.current
+        ) {
 
           videoRef.current.srcObject =
             stream;
@@ -248,46 +266,189 @@ function App() {
   };
 
   // =========================
-  // CAPTURE IMAGE
+  // UPLOAD FACE FUNCTION
   // =========================
 
-  const captureImage = () => {
+  const uploadFace = async (
+    capturedImage
+  ) => {
 
-    const video =
-      videoRef.current;
+    try {
 
-    const canvas =
-      document.createElement(
-        "canvas"
+      const response =
+        await axios.post(
+
+          "http://localhost:5000/register-face",
+
+          {
+            image:
+              capturedImage,
+
+            registrationNumber:
+              loggedInStudent
+                .registrationNumber
+          }
+        );
+
+      console.log(
+        response.data
       );
 
-    canvas.width =
-      video.videoWidth;
-
-    canvas.height =
-      video.videoHeight;
-
-    const context =
-      canvas.getContext("2d");
-
-    context.drawImage(
-      video,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    const imageData =
-      canvas.toDataURL(
-        "image/png"
+      setMessage(
+        response.data.message
       );
 
-    setImage(imageData);
+    } catch (error) {
 
-    setMessage(
-      "Face Captured Successfully"
-    );
+      console.error(error);
+
+      setMessage(
+        "Face Upload Failed"
+      );
+    }
+  };
+
+  // =========================
+  // CAPTURE + RECOGNIZE FACE
+  // =========================
+
+  const captureImage = async () => {
+
+    try {
+
+      const video =
+        videoRef.current;
+
+      const canvas =
+        document.createElement(
+          "canvas"
+        );
+
+      canvas.width =
+        video.videoWidth;
+
+      canvas.height =
+        video.videoHeight;
+
+      const context =
+        canvas.getContext(
+          "2d"
+        );
+
+      context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      const imageData =
+        canvas.toDataURL(
+          "image/png"
+        );
+
+      setImage(
+        imageData
+      );
+
+      setMessage(
+        "Uploading Face..."
+      );
+
+      // =========================
+      // REGISTER FACE
+      // =========================
+
+      await uploadFace(
+        imageData
+      );
+
+      setMessage(
+        "Recognizing Face..."
+      );
+
+      // =========================
+      // RECOGNIZE FACE
+      // =========================
+
+      const recognizeResponse =
+        await axios.post(
+
+          "http://localhost:5000/recognize-face",
+
+          {
+            image: imageData
+          }
+        );
+
+      console.log(
+        recognizeResponse.data
+      );
+
+      // =========================
+      // IF MATCH FOUND
+      // =========================
+
+      if (
+        recognizeResponse.data.matched
+      ) {
+
+        const matchedRegistrationNumber =
+
+          recognizeResponse.data
+            .registrationNumber;
+
+        // =========================
+        // MARK ATTENDANCE
+        // =========================
+
+        const attendanceResponse =
+          await axios.post(
+
+            "http://localhost:8082/attendance/mark",
+
+            {
+
+              registrationNumber:
+                matchedRegistrationNumber,
+
+              studentName:
+                loggedInStudent.name
+            }
+          );
+
+        console.log(
+          attendanceResponse.data
+        );
+
+        setMessage(
+          "Attendance Marked Successfully"
+        );
+
+        alert(
+          "Attendance Marked Successfully"
+        );
+
+      } else {
+
+        setMessage(
+          "Face Not Recognized"
+        );
+
+        alert(
+          "Face Not Recognized"
+        );
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      setMessage(
+        "Face Recognition Failed"
+      );
+    }
   };
 
   return (
@@ -320,12 +481,10 @@ function App() {
               }
             >
 
-              <div
-                style={{
-                  marginBottom:
-                    "10px"
-                }}
-              >
+              <div style={{
+                marginBottom:
+                  "10px"
+              }}>
 
                 <input
                   type="text"
@@ -350,12 +509,10 @@ function App() {
 
               </div>
 
-              <div
-                style={{
-                  marginBottom:
-                    "10px"
-                }}
-              >
+              <div style={{
+                marginBottom:
+                  "10px"
+              }}>
 
                 <input
                   type="password"
@@ -380,12 +537,10 @@ function App() {
 
               </div>
 
-              <div
-                style={{
-                  marginBottom:
-                    "10px"
-                }}
-              >
+              <div style={{
+                marginBottom:
+                  "10px"
+              }}>
 
                 <input
                   type="text"
@@ -410,12 +565,10 @@ function App() {
 
               </div>
 
-              <div
-                style={{
-                  marginBottom:
-                    "10px"
-                }}
-              >
+              <div style={{
+                marginBottom:
+                  "10px"
+              }}>
 
                 <input
                   type="email"
@@ -440,12 +593,10 @@ function App() {
 
               </div>
 
-              <div
-                style={{
-                  marginBottom:
-                    "10px"
-                }}
-              >
+              <div style={{
+                marginBottom:
+                  "10px"
+              }}>
 
                 <input
                   type="text"
@@ -500,12 +651,10 @@ function App() {
               }
             >
 
-              <div
-                style={{
-                  marginBottom:
-                    "15px"
-                }}
-              >
+              <div style={{
+                marginBottom:
+                  "15px"
+              }}>
 
                 <input
                   type="text"
@@ -528,12 +677,10 @@ function App() {
 
               </div>
 
-              <div
-                style={{
-                  marginBottom:
-                    "15px"
-                }}
-              >
+              <div style={{
+                marginBottom:
+                  "15px"
+              }}>
 
                 <input
                   type="password"
@@ -616,7 +763,7 @@ function App() {
                   "10px"
               }}
             >
-              Register Face
+              Start Camera
             </button>
 
             <button
@@ -641,7 +788,9 @@ function App() {
                 <div>
 
                   <video
-                    ref={videoRef}
+                    ref={
+                      videoRef
+                    }
                     autoPlay
                     width="400"
                     style={{
@@ -680,7 +829,9 @@ function App() {
                         </h3>
 
                         <img
-                          src={image}
+                          src={
+                            image
+                          }
                           alt="Captured"
                           width="300"
                           style={{
