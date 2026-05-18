@@ -1,38 +1,499 @@
-.App {
-  text-align: center;
-}
+/* ===================================
+   HERO SECTION - Viewport-Filling Typography
+   =================================== */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.hero {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: var(--space-lg) 8.33%;
+  position: relative;
+  overflow: hidden;
 }
 
-.App-link {
-  color: #61dafb;
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 14rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin: 0;
+  color: var(--color-light);
+  text-wrap: balance;
 }
 
-@keyframes App-logo-spin {
+.hero__subtitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: 400;
+  line-height: 1.4;
+  margin-top: var(--space-md);
+  max-width: 600px;
+  color: rgba(250, 249, 249, 0.7);
+  font-style: italic;
+}
+
+.hero__accent {
+  color: var(--color-accent);
+  display: inline-block;
+}
+
+/* ===================================
+   NAVIGATION
+   =================================== */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-md) 8.33%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  background: linear-gradient(180deg, var(--color-dark) 0%, transparent 100%);
+}
+
+.nav__logo {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-light);
+  text-decoration: none;
+}
+
+.nav__status {
+  font-size: 0.875rem;
+  color: rgba(250, 249, 249, 0.6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.nav__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: pulse 2s var(--ease-expo-out) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* ===================================
+   SECTION LAYOUT
+   =================================== */
+
+.section {
+  min-height: 100vh;
+  padding: var(--space-xl) 8.33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.section--compact {
+  min-height: auto;
+  padding: var(--space-lg) 8.33%;
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-lg);
+  color: var(--color-light);
+}
+
+.section__subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: rgba(250, 249, 249, 0.6);
+  margin-bottom: var(--space-md);
+  max-width: 600px;
+}
+
+/* ===================================
+   FORM SYSTEM
+   =================================== */
+
+.form {
+  max-width: 500px;
+  width: 100%;
+}
+
+.form__group {
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+
+.form__input {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  color: var(--color-light);
+  transition: all 0.4s var(--ease-expo-out);
+  outline: none;
+}
+
+.form__input::placeholder {
+  color: rgba(250, 249, 249, 0.4);
+}
+
+.form__input:focus {
+  border-color: var(--color-accent);
+  background: rgba(26, 26, 26, 0.8);
+  transform: translateY(-2px);
+}
+
+.form__input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ===================================
+   BUTTON SYSTEM - Magnetic Effect
+   =================================== */
+
+.btn {
+  padding: 1.25rem 3rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  background: var(--color-light);
+  color: var(--color-dark);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s var(--ease-expo-out);
+  text-transform: uppercase;
+}
+
+.btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(255, 77, 0, 0.3);
+}
+
+.btn:active {
+  transform: translateY(-2px);
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-light);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--color-light);
+  border: 1px solid var(--color-border);
+}
+
+.btn--secondary:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 77, 0, 0.1);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ===================================
+   CAMERA INTERFACE - Signature Moment
+   =================================== */
+
+.camera {
+  position: relative;
+  max-width: 600px;
+  width: 100%;
+  margin: var(--space-lg) 0;
+}
+
+.camera__viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.camera__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.camera__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.camera__frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  border: 3px solid var(--color-accent);
+  border-radius: 50%;
+  animation: scan 3s var(--ease-expo-in-out) infinite;
+}
+
+@keyframes scan {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.95); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+.camera__corners {
+  position: absolute;
+  inset: 10%;
+}
+
+.camera__corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--color-accent);
+}
+
+.camera__corner--tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+.camera__corner--tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+.camera__corner--bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+.camera__corner--br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+.camera__controls {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.camera__status {
+  margin-top: var(--space-sm);
+  font-size: 0.875rem;
+  color: rgba(250, 249, 249, 0.6);
+  font-style: italic;
+}
+
+/* ===================================
+   CAPTURED IMAGE DISPLAY
+   =================================== */
+
+.capture {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.capture__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-md);
+  color: var(--color-light);
+}
+
+.capture__image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border: 2px solid var(--color-accent);
+  display: block;
+}
+
+/* ===================================
+   STUDENT PROFILE CARD
+   =================================== */
+
+.profile {
+  max-width: 500px;
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space-lg);
+}
+
+.profile__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+  color: var(--color-light);
+}
+
+.profile__detail {
+  font-size: 1rem;
+  color: rgba(250, 249, 249, 0.7);
+  margin-bottom: var(--space-xs);
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.profile__label {
+  color: rgba(250, 249, 249, 0.4);
+  min-width: 80px;
+}
+
+.profile__actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* ===================================
+   STUDENTS TABLE - Asymmetric Grid
+   =================================== */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: var(--space-lg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table__head {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table__header {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: rgba(250, 249, 249, 0.6);
+}
+
+.table__row {
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.3s var(--ease-expo-out);
+}
+
+.table__row:hover {
+  background: rgba(26, 26, 26, 0.5);
+}
+
+.table__cell {
+  padding: var(--space-md);
+  color: rgba(250, 249, 249, 0.8);
+}
+
+/* ===================================
+   MESSAGE SYSTEM
+   =================================== */
+
+.message {
+  padding: var(--space-md);
+  margin: var(--space-md) 0;
+  background: rgba(255, 77, 0, 0.1);
+  border-left: 4px solid var(--color-accent);
+  font-size: 1rem;
+  color: var(--color-light);
+  animation: slideIn 0.6s var(--ease-expo-out);
+}
+
+@keyframes slideIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateX(-20px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===================================
+   DIVIDER
+   =================================== */
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-xl) 0;
+  width: 100%;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-lg) 5%;
+  }
+  
+  .section {
+    padding: var(--space-lg) 5%;
+  }
+  
+  .nav {
+    padding: var(--space-sm) 5%;
+  }
+  
+  .hero__title {
+    font-size: clamp(2.5rem, 10vw, 6rem);
+  }
+  
+  .section__title {
+    font-size: clamp(1.75rem, 8vw, 3rem);
+  }
+  
+  .btn {
+    padding: 1rem 2rem;
+    width: 100%;
+  }
+  
+  .profile__actions {
+    flex-direction: column;
+  }
+  
+  .camera__controls {
+    flex-direction: column;
+  }
+}
+
+/* ===================================
+   ACCESSIBILITY
+   =================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

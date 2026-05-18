@@ -1,10 +1,55 @@
-import React, {
-  useEffect,
-  useState,
-  useRef
-} from "react";
-
+import React, { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import "./App.css";
+import AdminDashboard from "./components/AdminDashboard";
+
+// Smooth scroll setup
+if (typeof window !== 'undefined') {
+  import('@studio-freight/lenis').then(({ default: Lenis }) => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  });
+}
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+  }
+};
 
 function App() {
 
@@ -452,490 +497,385 @@ function App() {
   };
 
   return (
-
-    <div style={{
-      padding: "30px",
-      fontFamily: "Arial"
-    }}>
-
-      <h1>
-        AI Attendance System
-      </h1>
-
-      {
-        !loggedInStudent && (
-
-          <div>
-
-            {/* =========================
-                SIGNUP FORM
-            ========================= */}
-
-            <h2>
-              Student Signup
-            </h2>
-
-            <form
-              onSubmit={
-                handleSignup
-              }
-            >
-
-              <div style={{
-                marginBottom:
-                  "10px"
-              }}>
-
-                <input
-                  type="text"
-                  placeholder="Registration Number"
-                  value={
-                    signupData.registrationNumber
-                  }
-                  onChange={(e) =>
-                    setSignupData({
-                      ...signupData,
-                      registrationNumber:
-                        e.target.value
-                    })
-                  }
-                  style={{
-                    padding:
-                      "10px",
-                    width:
-                      "300px"
-                  }}
-                />
-
-              </div>
-
-              <div style={{
-                marginBottom:
-                  "10px"
-              }}>
-
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={
-                    signupData.password
-                  }
-                  onChange={(e) =>
-                    setSignupData({
-                      ...signupData,
-                      password:
-                        e.target.value
-                    })
-                  }
-                  style={{
-                    padding:
-                      "10px",
-                    width:
-                      "300px"
-                  }}
-                />
-
-              </div>
-
-              <div style={{
-                marginBottom:
-                  "10px"
-              }}>
-
-                <input
-                  type="text"
-                  placeholder="Name"
-                  value={
-                    signupData.name
-                  }
-                  onChange={(e) =>
-                    setSignupData({
-                      ...signupData,
-                      name:
-                        e.target.value
-                    })
-                  }
-                  style={{
-                    padding:
-                      "10px",
-                    width:
-                      "300px"
-                  }}
-                />
-
-              </div>
-
-              <div style={{
-                marginBottom:
-                  "10px"
-              }}>
-
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={
-                    signupData.email
-                  }
-                  onChange={(e) =>
-                    setSignupData({
-                      ...signupData,
-                      email:
-                        e.target.value
-                    })
-                  }
-                  style={{
-                    padding:
-                      "10px",
-                    width:
-                      "300px"
-                  }}
-                />
-
-              </div>
-
-              <div style={{
-                marginBottom:
-                  "10px"
-              }}>
-
-                <input
-                  type="text"
-                  placeholder="Section"
-                  value={
-                    signupData.section
-                  }
-                  onChange={(e) =>
-                    setSignupData({
-                      ...signupData,
-                      section:
-                        e.target.value
-                    })
-                  }
-                  style={{
-                    padding:
-                      "10px",
-                    width:
-                      "300px"
-                  }}
-                />
-
-              </div>
-
-              <button
-                type="submit"
-                style={{
-                  padding:
-                    "10px 20px",
-                  cursor:
-                    "pointer"
-                }}
-              >
-                Signup
-              </button>
-
-            </form>
-
-            <hr />
-
-            {/* =========================
-                LOGIN FORM
-            ========================= */}
-
-            <h2>
-              Student Login
-            </h2>
-
-            <form
-              onSubmit={
-                handleLogin
-              }
-            >
-
-              <div style={{
-                marginBottom:
-                  "15px"
-              }}>
-
-                <input
-                  type="text"
-                  placeholder="Registration Number"
-                  value={
-                    registrationNumber
-                  }
-                  onChange={(e) =>
-                    setRegistrationNumber(
-                      e.target.value
-                    )
-                  }
-                  style={{
-                    padding:
-                      "10px",
-                    width:
-                      "300px"
-                  }}
-                />
-
-              </div>
-
-              <div style={{
-                marginBottom:
-                  "15px"
-              }}>
-
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={
-                    password
-                  }
-                  onChange={(e) =>
-                    setPassword(
-                      e.target.value
-                    )
-                  }
-                  style={{
-                    padding:
-                      "10px",
-                    width:
-                      "300px"
-                  }}
-                />
-
-              </div>
-
-              <button
-                type="submit"
-                style={{
-                  padding:
-                    "10px 20px",
-                  cursor:
-                    "pointer"
-                }}
-              >
-                Login
-              </button>
-
-            </form>
-
+    <>
+      {/* Navigation */}
+      <motion.nav 
+        className="nav"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="nav__logo">AI Attendance</div>
+        {loggedInStudent && (
+          <div className="nav__status">
+            <span className="nav__status-dot"></span>
+            <span>{loggedInStudent.name}</span>
           </div>
-        )
-      }
+        )}
+      </motion.nav>
 
-      <h3>{message}</h3>
+      {/* Hero Section */}
+      {!loggedInStudent && (
+        <motion.section 
+          className="hero"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
+          <motion.h1 className="hero__title" variants={fadeInUp}>
+            Face The
+            <br />
+            <span className="hero__accent">Future</span>
+          </motion.h1>
+          <motion.p className="hero__subtitle" variants={fadeInUp}>
+            Next-generation attendance powered by facial recognition AI.
+            Secure, instant, effortless.
+          </motion.p>
+        </motion.section>
+      )}
 
-      {
-        loggedInStudent && (
+      {/* Message Display */}
+      <AnimatePresence>
+        {message && (
+          <motion.div
+            className="message"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            style={{ 
+              position: 'fixed', 
+              top: '100px', 
+              right: '8.33%', 
+              zIndex: 1000,
+              maxWidth: '400px'
+            }}
+          >
+            {message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          <div>
+      {/* Authentication Section */}
+      {!loggedInStudent && (
+        <section className="section">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+          >
+            {/* Signup Form */}
+            <motion.div variants={fadeInUp}>
+              <h2 className="section__title">Create Account</h2>
+              <p className="section__subtitle">
+                Register to access the AI-powered attendance system
+              </p>
 
-            <h2>
-              Welcome {
-                loggedInStudent.name
-              }
-            </h2>
-
-            <p>
-              Section:
-              {" "}
-              {
-                loggedInStudent.section
-              }
-            </p>
-
-            <p>
-              Email:
-              {" "}
-              {
-                loggedInStudent.email
-              }
-            </p>
-
-            <button
-              onClick={
-                startCamera
-              }
-              style={{
-                padding:
-                  "10px",
-                cursor:
-                  "pointer",
-                marginRight:
-                  "10px"
-              }}
-            >
-              Start Camera
-            </button>
-
-            <button
-              onClick={
-                handleLogout
-              }
-              style={{
-                padding:
-                  "10px",
-                cursor:
-                  "pointer",
-                marginBottom:
-                  "20px"
-              }}
-            >
-              Logout
-            </button>
-
-            {
-              cameraOn && (
-
-                <div>
-
-                  <video
-                    ref={
-                      videoRef
+              <form className="form" onSubmit={handleSignup}>
+                <div className="form__group">
+                  <input
+                    type="text"
+                    className="form__input"
+                    placeholder="Registration Number"
+                    value={signupData.registrationNumber}
+                    onChange={(e) =>
+                      setSignupData({
+                        ...signupData,
+                        registrationNumber: e.target.value
+                      })
                     }
-                    autoPlay
-                    width="400"
-                    style={{
-                      marginTop:
-                        "20px",
-                      border:
-                        "2px solid black"
-                    }}
+                    required
                   />
+                </div>
 
-                  <br />
-
-                  <button
-                    onClick={
-                      captureImage
+                <div className="form__group">
+                  <input
+                    type="password"
+                    className="form__input"
+                    placeholder="Password"
+                    value={signupData.password}
+                    onChange={(e) =>
+                      setSignupData({
+                        ...signupData,
+                        password: e.target.value
+                      })
                     }
-                    style={{
-                      padding:
-                        "10px",
-                      marginTop:
-                        "15px",
-                      cursor:
-                        "pointer"
+                    required
+                  />
+                </div>
+
+                <div className="form__group">
+                  <input
+                    type="text"
+                    className="form__input"
+                    placeholder="Full Name"
+                    value={signupData.name}
+                    onChange={(e) =>
+                      setSignupData({
+                        ...signupData,
+                        name: e.target.value
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form__group">
+                  <input
+                    type="email"
+                    className="form__input"
+                    placeholder="Email Address"
+                    value={signupData.email}
+                    onChange={(e) =>
+                      setSignupData({
+                        ...signupData,
+                        email: e.target.value
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form__group">
+                  <input
+                    type="text"
+                    className="form__input"
+                    placeholder="Section"
+                    value={signupData.section}
+                    onChange={(e) =>
+                      setSignupData({
+                        ...signupData,
+                        section: e.target.value
+                      })
+                    }
+                    required
+                  />
+                </div>
+
+                <motion.button
+                  type="submit"
+                  className="btn btn--primary"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Create Account
+                </motion.button>
+              </form>
+            </motion.div>
+
+            <div className="divider"></div>
+
+            {/* Login Form */}
+            <motion.div variants={fadeInUp}>
+              <h2 className="section__title">Sign In</h2>
+              <p className="section__subtitle">
+                Access your account to mark attendance
+              </p>
+
+              <form className="form" onSubmit={handleLogin}>
+                <div className="form__group">
+                  <input
+                    type="text"
+                    className="form__input"
+                    placeholder="Registration Number"
+                    value={registrationNumber}
+                    onChange={(e) => setRegistrationNumber(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form__group">
+                  <input
+                    type="password"
+                    className="form__input"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <motion.button
+                  type="submit"
+                  className="btn btn--primary"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Sign In
+                </motion.button>
+              </form>
+            </motion.div>
+          </motion.div>
+        </section>
+      )}
+
+      {/* Logged In Dashboard */}
+      {loggedInStudent && (
+        <motion.section 
+          className="section"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
+          {/* Profile Card */}
+          <motion.div className="profile" variants={scaleIn}>
+            <h2 className="profile__name">{loggedInStudent.name}</h2>
+            <div className="profile__detail">
+              <span className="profile__label">Section:</span>
+              <span>{loggedInStudent.section}</span>
+            </div>
+            <div className="profile__detail">
+              <span className="profile__label">Email:</span>
+              <span>{loggedInStudent.email}</span>
+            </div>
+            <div className="profile__detail">
+              <span className="profile__label">Reg No:</span>
+              <span>{loggedInStudent.registrationNumber}</span>
+            </div>
+
+            <div className="profile__actions">
+              <motion.button
+                className="btn btn--primary"
+                onClick={startCamera}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {cameraOn ? 'Camera Active' : 'Start Camera'}
+              </motion.button>
+              <motion.button
+                className="btn btn--secondary"
+                onClick={handleLogout}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Sign Out
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Camera Interface - Signature Moment */}
+          <AnimatePresence>
+            {cameraOn && (
+              <motion.div
+                className="camera"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="camera__viewport">
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    className="camera__video"
+                  />
+                  <div className="camera__overlay">
+                    <div className="camera__frame"></div>
+                    <div className="camera__corners">
+                      <div className="camera__corner camera__corner--tl"></div>
+                      <div className="camera__corner camera__corner--tr"></div>
+                      <div className="camera__corner camera__corner--bl"></div>
+                      <div className="camera__corner camera__corner--br"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="camera__controls">
+                  <motion.button
+                    className="btn btn--primary"
+                    onClick={captureImage}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Capture & Verify Face
+                  </motion.button>
+                </div>
+
+                <p className="camera__status">
+                  Position your face within the frame for optimal recognition
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Captured Image Display */}
+          <AnimatePresence>
+            {image && (
+              <motion.div
+                className="capture"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <h3 className="capture__title">Captured Image</h3>
+                <img
+                  src={image}
+                  alt="Captured face"
+                  className="capture__image"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.section>
+      )}
+
+      {/* Students List Section */}
+      <section className="section section--compact">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+        >
+          <motion.h2 className="section__title" variants={fadeInUp}>
+            Registered Students
+          </motion.h2>
+
+          <motion.div className="table-container" variants={fadeInUp}>
+            <table className="table">
+              <thead className="table__head">
+                <tr>
+                  <th className="table__header">ID</th>
+                  <th className="table__header">Registration No</th>
+                  <th className="table__header">Name</th>
+                  <th className="table__header">Email</th>
+                  <th className="table__header">Section</th>
+                  <th className="table__header">Face Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student, index) => (
+                  <motion.tr
+                    key={student.id}
+                    className="table__row"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: index * 0.05,
+                      ease: [0.16, 1, 0.3, 1] 
                     }}
                   >
-                    Capture Face
-                  </button>
-
-                  {
-                    image && (
-
-                      <div>
-
-                        <h3>
-                          Captured Face
-                        </h3>
-
-                        <img
-                          src={
-                            image
-                          }
-                          alt="Captured"
-                          width="300"
-                          style={{
-                            border:
-                              "2px solid black",
-                            marginTop:
-                              "10px"
-                          }}
-                        />
-
-                      </div>
-                    )
-                  }
-
-                </div>
-              )
-            }
-
-          </div>
-        )
-      }
-
-      <hr />
-
-      {/* =========================
-          STUDENTS TABLE
-      ========================= */}
-
-      <h2>
-        Students List
-      </h2>
-
-      <table
-        border="1"
-        cellPadding="10"
-      >
-
-        <thead>
-
-          <tr>
-            <th>ID</th>
-            <th>
-              Registration No
-            </th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Section</th>
-            <th>
-              Face Image
-            </th>
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {students.map(
-            (student) => (
-
-              <tr
-                key={
-                  student.id
-                }
-              >
-
-                <td>
-                  {student.id}
-                </td>
-
-                <td>
-                  {
-                    student.registrationNumber
-                  }
-                </td>
-
-                <td>
-                  {student.name}
-                </td>
-
-                <td>
-                  {student.email}
-                </td>
-
-                <td>
-                  {
-                    student.section
-                  }
-                </td>
-
-                <td>
-                  {
-                    student.faceEncodingPath
-                  }
-                </td>
-
-              </tr>
-            )
-          )}
-
-        </tbody>
-
-      </table>
-
-    </div>
+                    <td className="table__cell">{student.id}</td>
+                    <td className="table__cell">{student.registrationNumber}</td>
+                    <td className="table__cell">{student.name}</td>
+                    <td className="table__cell">{student.email}</td>
+                    <td className="table__cell">{student.section}</td>
+                    <td className="table__cell">
+                      {student.faceEncodingPath ? '✓ Registered' : '— Pending'}
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        </motion.div>
+      </section>
+      <AdminDashboard />
+    </>
   );
 }
 
