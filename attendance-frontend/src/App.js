@@ -73,6 +73,26 @@ function App() {
     setLoggedInStudent]
     = useState(null);
 
+  const [
+    adminToken,
+    setAdminToken
+  ] = useState(
+
+    localStorage.getItem(
+      "adminToken"
+    ) || ""
+  );
+
+  const [
+    adminUsername,
+    setAdminUsername
+  ] = useState("");
+
+  const [
+    adminPassword,
+    setAdminPassword
+  ] = useState("");
+
   // =========================
   // SIGNUP STATES
   // =========================
@@ -206,6 +226,58 @@ function App() {
     }
   };
 
+
+  // =========================
+  // ADMIN LOGIN
+  // =========================
+
+  const handleAdminLogin =
+    async (e) => {
+
+      e.preventDefault();
+
+      try {
+
+        const response =
+          await axios.post(
+
+            "http://localhost:8082/auth/login",
+
+            {
+
+              username:
+                adminUsername,
+
+              password:
+                adminPassword
+            }
+          );
+
+        localStorage.setItem(
+
+          "adminToken",
+
+          response.data.token
+        );
+
+        setAdminToken(
+          response.data.token
+        );
+
+        setMessage(
+          "Admin Login Successful"
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+        setMessage(
+          "Invalid Admin Credentials"
+        );
+      }
+    };
+
   // =========================
   // SIGNUP FUNCTION
   // =========================
@@ -255,6 +327,21 @@ function App() {
   // =========================
   // LOGOUT FUNCTION
   // =========================
+
+
+  const handleAdminLogout =
+  () => {
+
+    localStorage.removeItem(
+      "adminToken"
+    );
+
+    setAdminToken("");
+
+    setMessage(
+      "Admin Logged Out"
+    );
+  };
 
   const handleLogout = () => {
 
@@ -821,6 +908,139 @@ function App() {
         </motion.section>
       )}
 
+
+
+      {/* =========================
+          ADMIN AUTH SECTION
+        ========================= */}
+
+      <section className="section">
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+          once: true
+          }}
+          variants={staggerContainer}
+        >
+
+          <motion.h2
+            className="section__title"
+            variants={fadeInUp}
+          >
+            Admin Access
+          </motion.h2>
+
+          {
+
+            !adminToken ? (
+
+              <form
+                className="form"
+                onSubmit={
+                  handleAdminLogin
+                }
+              >
+
+                <div className="form__group">
+
+                  <input
+                    type="text"
+
+                    className="form__input"
+
+                    placeholder="Admin Username"
+
+                    value={adminUsername}
+
+                    onChange={(e) =>
+                      setAdminUsername(
+                        e.target.value
+                      )
+                    }
+
+                    required
+                  />
+
+                </div>
+
+                <div className="form__group">
+
+                  <input
+                    type="password"
+
+                    className="form__input"
+
+                    placeholder="Admin Password"
+
+                    value={adminPassword}
+
+                    onChange={(e) =>
+                      setAdminPassword(
+                        e.target.value
+                      )
+                    }
+
+                    required
+                  />
+
+                </div>
+
+                <motion.button
+
+                  type="submit"
+
+                  className="btn btn--primary"
+
+                  whileHover={{
+                    scale: 1.02
+                  }}
+
+                  whileTap={{
+                    scale: 0.98
+                  }}
+                >
+                  Admin Login
+                </motion.button>
+
+              </form>
+
+            ) : (
+
+              <div
+                style={{
+                  textAlign: "center"
+                }}
+              >
+
+                <motion.button
+
+                  className="btn btn--secondary"
+
+                  onClick={
+                    handleAdminLogout
+                  }
+
+                  whileHover={{
+                    scale: 1.02
+                  }}
+
+                  whileTap={{
+                    scale: 0.98
+                  }}
+                >
+                  Admin Logout
+                </motion.button>
+
+              </div>
+            )
+          }
+
+        </motion.div>
+
+      </section>
+
       {/* Students List Section */}
       <section className="section section--compact">
         <motion.div
@@ -874,7 +1094,11 @@ function App() {
           </motion.div>
         </motion.div>
       </section>
-      <AdminDashboard />
+      {
+        adminToken && (
+          <AdminDashboard />
+        )
+      }
     </>
   );
 }

@@ -10,8 +10,8 @@ from "./AttendanceChart";
 
 import jsPDF
 from "jspdf";
-
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
+//import "jspdf-autotable";
 
 function AdminDashboard() {
 
@@ -207,7 +207,7 @@ function AdminDashboard() {
       tableRows.push(row);
     });
 
-    doc.autoTable({
+    autoTable(doc, {
 
       head: [tableColumn],
 
