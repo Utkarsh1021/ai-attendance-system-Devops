@@ -1,5 +1,7 @@
 package com.utkarsh.attendance_system.jwt;
 
+import io.jsonwebtoken.Claims;
+
 import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -55,5 +57,68 @@ public class JwtUtil {
                 )
 
                 .compact();
+    }
+
+    // =========================
+    // EXTRACT USERNAME
+    // =========================
+
+    public static String
+    extractUsername(
+
+            String token
+
+    ) {
+
+        Claims claims =
+
+                Jwts.parserBuilder()
+
+                        .setSigningKey(
+                                SECRET_KEY
+                        )
+
+                        .build()
+
+                        .parseClaimsJws(
+                                token
+                        )
+
+                        .getBody();
+
+        return claims.getSubject();
+    }
+
+    // =========================
+    // VALIDATE TOKEN
+    // =========================
+
+    public static boolean
+    validateToken(
+
+            String token
+
+    ) {
+
+        try {
+
+            Jwts.parserBuilder()
+
+                    .setSigningKey(
+                            SECRET_KEY
+                    )
+
+                    .build()
+
+                    .parseClaimsJws(
+                            token
+                    );
+
+            return true;
+
+        } catch (Exception e) {
+
+            return false;
+        }
     }
 }

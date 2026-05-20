@@ -41,7 +41,19 @@ function AdminDashboard() {
         const response =
           await axios.get(
 
-            "http://localhost:8082/attendance"
+            "http://localhost:8082/attendance",
+
+            {
+
+              headers: {
+
+                Authorization:
+
+                  `Bearer ${localStorage.getItem(
+                    "adminToken"
+                  )}`
+              }
+            }
           );
 
         setAttendance(
@@ -66,7 +78,19 @@ function AdminDashboard() {
         const response =
           await axios.get(
 
-            "http://localhost:8082/attendance/count"
+            "http://localhost:8082/attendance/count",
+
+            {
+
+              headers: {
+
+                Authorization:
+
+                  `Bearer ${localStorage.getItem(
+                    "adminToken"
+                  )}`
+              }
+            }
           );
 
         setTotalCount(
@@ -90,7 +114,19 @@ function AdminDashboard() {
 
         await axios.delete(
 
-          `http://localhost:8082/attendance/${id}`
+          `http://localhost:8082/attendance/${id}`,
+
+          {
+
+            headers: {
+
+              Authorization:
+
+                `Bearer ${localStorage.getItem(
+                  "adminToken"
+                )}`
+            }
+          }
         );
 
         fetchAttendance();
