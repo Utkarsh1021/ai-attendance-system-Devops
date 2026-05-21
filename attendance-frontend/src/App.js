@@ -108,6 +108,9 @@ function App() {
 
     });
 
+  const [signupFace,
+    setSignupFace] = useState(null);
+
   // =========================
   // STUDENT LIST
   // =========================
@@ -127,6 +130,15 @@ function App() {
   const [image,
     setImage]
     = useState(null);
+
+
+  const [
+    signupCameraOn,
+    setSignupCameraOn
+  ] = useState(false);
+
+  const signupVideoRef =
+  useRef(null);
 
   // =========================
   // VIDEO REF
@@ -287,10 +299,23 @@ function App() {
     e.preventDefault();
 
     try {
+      if (!signupFace) {
+
+        setMessage(
+          "Please upload or capture a face image"
+        );
+        return;
+      }
+
+    // =========================
+    // SAVE STUDENT
+    // =========================
 
       const response =
         await axios.post(
+
           "http://localhost:8082/students/signup",
+
           signupData
         );
 
@@ -298,11 +323,37 @@ function App() {
         response.data
       );
 
+      // =========================
+      // REGISTER FACE
+      // =========================
+
+      await axios.post(
+
+        "http://localhost:5000/register-face",
+
+        {
+
+          image:
+            signupFace,
+
+          registrationNumber:
+            signupData.registrationNumber
+        }
+      );
+
+      // =========================
+      // SUCCESS MESSAGE
+      // =========================
+
       setMessage(
-        "Signup Successful"
+        "Signup + Face Registration Successful"
       );
 
       fetchStudents();
+
+      // =========================
+      // RESET FORM
+      // =========================
 
       setSignupData({
 
@@ -313,6 +364,8 @@ function App() {
         section: ""
 
       });
+
+      setSignupFace(null);
 
     } catch (error) {
 
@@ -397,37 +450,115 @@ function App() {
     }
   };
 
-  // =========================
-  // UPLOAD FACE FUNCTION
-  // =========================
+  const startSignupCamera = async () => {
+    try {
+      setSignupCameraOn(
+        true
+      );
 
-  const uploadFace = async (
-    capturedImage
-  ) => {
+      const stream =
+
+        await navigator
+          .mediaDevices
+          .getUserMedia({
+
+            video: true
+          });
+
+      setTimeout(() => {
+
+        if (
+          signupVideoRef.current
+        ) {
+
+          signupVideoRef.current.srcObject =
+            stream;
+        }
+
+      }, 100);
+
+    } catch (error) {
+
+      console.error(error);
+
+      setMessage(
+        "Camera Access Denied"
+      );
+    }
+  };
+
+
+  const captureSignupFace =
+  () => {
 
     try {
 
-      const response =
-        await axios.post(
+      const video =
+        signupVideoRef.current;
 
-          "http://localhost:5000/register-face",
-
-          {
-            image:
-              capturedImage,
-
-            registrationNumber:
-              loggedInStudent
-                .registrationNumber
-          }
+      const canvas =
+        document.createElement(
+          "canvas"
         );
 
-      console.log(
-        response.data
+      canvas.width =
+        video.videoWidth;
+
+      canvas.height =
+        video.videoHeight;
+
+      const context =
+        canvas.getContext(
+          "2d"
+        );
+
+      context.drawImage(
+
+        video,
+
+        0,
+
+        0,
+
+        canvas.width,
+
+        canvas.height
+      );
+
+      const imageData =
+        canvas.toDataURL(
+          "image/png"
+        );
+
+      setSignupFace(
+        imageData
+      );
+
+      // =========================
+      // STOP CAMERA STREAM
+      // =========================
+
+      const stream =
+        video.srcObject;
+
+      if (stream) {
+
+        stream
+          .getTracks()
+          .forEach(track =>
+            track.stop()
+          );
+      }
+
+      video.srcObject =
+        null;
+
+      setSignupCameraOn(
+        false
       );
 
       setMessage(
-        response.data.message
+        "Face Captured Successfully"
       );
 
     } catch (error) {
@@ -435,10 +566,53 @@ function App() {
       console.error(error);
 
       setMessage(
-        "Face Upload Failed"
+        "Face Capture Failed"
       );
     }
   };
+
+  // =========================
+  // UPLOAD FACE FUNCTION
+  // =========================
+
+  // const uploadFace = async (
+  //   capturedImage
+  // ) => {
+
+  //   try {
+
+  //     const response =
+  //       await axios.post(
+
+  //         "http://localhost:5000/register-face",
+
+  //         {
+  //           image:
+  //             capturedImage,
+
+  //           registrationNumber:
+  //             loggedInStudent
+  //               .registrationNumber
+  //         }
+  //       );
+
+  //     console.log(
+  //       response.data
+  //     );
+
+  //     setMessage(
+  //       response.data.message
+  //     );
+
+  //   } catch (error) {
+
+  //     console.error(error);
+
+  //     setMessage(
+  //       "Face Upload Failed"
+  //     );
+  //   }
+  // };
 
   // =========================
   // CAPTURE + RECOGNIZE FACE
@@ -484,17 +658,12 @@ function App() {
         imageData
       );
 
-      setMessage(
-        "Uploading Face..."
-      );
+      
 
       // =========================
       // REGISTER FACE
       // =========================
 
-      await uploadFace(
-        imageData
-      );
 
       setMessage(
         "Recognizing Face..."
@@ -546,7 +715,7 @@ function App() {
                 matchedRegistrationNumber,
 
               studentName:
-                loggedInStudent.name
+                matchedRegistrationNumber
             }
           );
 
@@ -574,6 +743,9 @@ function App() {
       }
 
     } catch (error) {
+      console.error(
+        error.response?.data
+      );
 
       console.error(error);
 
@@ -739,6 +911,73 @@ function App() {
                     required
                   />
                 </div>
+
+                <div className="form__group">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="form__input"
+                    onChange={(e) => {
+                      const file = 
+                        e.target.files[0];
+                      const reader =
+                        new FileReader();
+                      reader.onloadend = () => {
+                        setSignupFace(
+                          reader.result
+                        );
+                      };
+                      if (file) {
+                        reader.readAsDataURL(
+                          file
+                        );
+                      }
+                    }}
+                    
+                  />
+
+                </div>
+                <motion.button
+                  type="button"
+                  className="btn btn--secondary"
+                  onClick={
+                    startSignupCamera
+                  }
+                  whileHover={{scale: 1.02}}
+                  whileTap={{scale: 0.98}}
+                >Register Your Face
+                </motion.button>
+
+                {
+                  signupCameraOn && (
+
+                    <div
+                      className="camera"
+                    >
+
+                      <video
+
+                        ref={signupVideoRef}
+
+                        autoPlay
+
+                        className="camera__video"
+                      />
+
+                      <motion.button
+                        type="button"
+                        className="btn btn--primary"
+                        onClick={
+                          captureSignupFace
+                        }
+                        whileHover={{scale: 1.02}}
+                        whileTap={{scale: 0.98}}
+                      >
+                        Capture Face
+                      </motion.button>
+                    </div>
+                  )
+                }
 
                 <motion.button
                   type="submit"

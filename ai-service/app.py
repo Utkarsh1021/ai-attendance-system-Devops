@@ -71,11 +71,25 @@ def load_known_faces():
                 )
             )
 
-            encodings = (
+            face_locations = (
                 face_recognition
-                .face_encodings(image)
+                .face_locations(
+                    image,
+                    model="hog"
+                )
             )
 
+            encodings = (
+                face_recognition
+                .face_encodings(
+
+                    image,
+
+                    face_locations,
+
+                    num_jitters=3
+                )
+            )
             if len(encodings) > 0:
 
                 encoding = encodings[0]
@@ -222,10 +236,25 @@ def recognize_face_api():
             )
         )
 
+        face_locations = (
+            face_recognition
+            .face_locations(
+
+                unknown_image,
+
+                model="hog"
+            )
+        )
+
         unknown_encodings = (
             face_recognition
             .face_encodings(
-                unknown_image
+
+                unknown_image,
+
+                face_locations,
+
+                num_jitters=3
             )
         )
 
@@ -267,7 +296,7 @@ def recognize_face_api():
 
                 unknown_encoding,
 
-                tolerance=0.65
+                tolerance=0.7
             )
         )
 
@@ -298,6 +327,15 @@ def recognize_face_api():
         )
 
         print(
+            "Matches:",
+            matches
+        )
+
+        print(
+            "Minimum Distance:",
+            np.min(face_distances)
+        )
+        print(
             "Matched Student:",
             known_face_names[
                 best_match_index
@@ -318,7 +356,7 @@ def recognize_face_api():
 
             face_distances[
                 best_match_index
-            ] < 0.65
+            ] < 0.7
         ):
 
             name = (
@@ -723,7 +761,7 @@ def recognize():
 
                     face_encoding,
 
-                    tolerance=0.65
+                    tolerance=0.7
                 )
             )
 
@@ -757,7 +795,7 @@ def recognize():
 
                     face_distances[
                         best_match_index
-                    ] < 0.65
+                    ] < 0.7
                 ):
 
                     name = (

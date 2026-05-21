@@ -24,6 +24,8 @@ import java.io.IOException;
 
 import java.util.Collections;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Component
 
 public class JwtFilter
@@ -39,6 +41,25 @@ public class JwtFilter
             FilterChain filterChain
 
     ) throws ServletException, IOException {
+        if (
+                request.getMethod()
+                .equalsIgnoreCase(
+                        "OPTIONS"
+                )
+
+        ) {
+
+                response.setStatus(
+                        HttpServletResponse.SC_OK
+                );
+
+                filterChain.doFilter(
+                        request,
+                        response
+                );
+
+                return;
+        }
 
         final String authHeader =
                 request.getHeader(
