@@ -7,6 +7,14 @@ import axios from "axios";
 
 import QRCode from "react-qr-code";
 
+import FacultyLiveDashboard from "./FacultyLiveDashboard";
+
+import {
+
+    useEffect
+
+} from "react";
+
 const FacultySession = () => {
 
     // =========================
@@ -28,6 +36,61 @@ const FacultySession = () => {
     const [session,
         setSession] =
         useState(null);
+
+
+    useEffect(() => {
+
+        if (!session?.sessionId)
+            return;
+
+        const interval =
+
+            setInterval(
+
+                async () => {
+
+                    try {
+
+                        const response =
+
+                            await axios.get(
+
+                                `http://localhost:8082/session/refresh-token?sessionId=${session.sessionId}`
+                            );
+
+                        console.log(
+                            response.data
+                        );
+
+                        setSession(
+
+                            prev => ({
+
+                                ...prev,
+
+                                qrToken:
+                                    response.data.qrToken
+                            })
+                        );
+
+                    } catch (error) {
+
+                        console.error(
+                            error
+                        );
+                    }
+
+                },
+
+                4000
+            );
+
+        return () =>
+            clearInterval(
+                interval
+            );
+
+    }, [session?.sessionId]);
 
     // =========================
     // CREATE SESSION
@@ -225,6 +288,18 @@ const FacultySession = () => {
                         </p>
 
                     </div>
+                )
+            }
+            {
+
+                session && (
+
+                    <FacultyLiveDashboard
+
+                        sessionId={
+                            session.sessionId
+                        }
+                    />
                 )
             }
         </div>

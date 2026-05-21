@@ -171,6 +171,79 @@ public class AttendanceController {
                 .findByDate(date);
     }
 
+        // =========================
+    // GET ATTENDANCE BY SESSION
+    // =========================
+
+    @GetMapping("/session/{sessionId}")
+    public List<Attendance>
+    getAttendanceBySession(
+
+            @PathVariable
+            String sessionId
+
+    ) {
+
+        return attendanceRepository
+                .findBySessionId(
+                        sessionId
+                );
+    }
+
+        // =========================
+    // MANUAL ATTENDANCE
+    // =========================
+
+    @PostMapping("/manual-mark")
+    public Object manualMarkAttendance(
+
+            @RequestBody
+            Attendance attendance
+
+    ) {
+
+        // =========================
+        // CHECK DUPLICATE
+        // =========================
+
+        boolean alreadyMarked =
+
+                attendanceRepository
+                        .existsByRegistrationNumberAndSessionId(
+
+                                attendance
+                                        .getRegistrationNumber(),
+
+                                attendance
+                                        .getSessionId()
+                        );
+
+        if (alreadyMarked) {
+
+            return "Attendance already marked";
+        }
+
+        // =========================
+        // SET VALUES
+        // =========================
+
+        attendance.setDate(
+                LocalDate.now()
+        );
+
+        attendance.setTime(
+                LocalTime.now()
+        );
+
+        attendance.setStatus(
+                "Present"
+        );
+
+        return attendanceRepository.save(
+                attendance
+        );
+    }
+
     // =========================
     // TOTAL ATTENDANCE COUNT
     // =========================

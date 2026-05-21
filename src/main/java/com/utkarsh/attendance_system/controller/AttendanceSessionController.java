@@ -175,4 +175,88 @@ public class AttendanceSessionController {
 
         return session;
     }
+
+    // =========================
+    // REFRESH QR TOKEN
+    // =========================
+
+    @GetMapping("/refresh-token")
+    public Object refreshQrToken(
+
+            @RequestParam
+            String sessionId
+
+    ) {
+
+        // =========================
+        // FIND SESSION
+        // =========================
+
+        var optionalSession =
+
+                sessionRepository
+                        .findBySessionId(
+                                sessionId
+                        );
+
+        // =========================
+        // SESSION NOT FOUND
+        // =========================
+
+        if (
+
+                optionalSession.isEmpty()
+
+        ) {
+
+            return "Session Not Found";
+        }
+
+        AttendanceSession session =
+
+                optionalSession.get();
+
+        // =========================
+        // SESSION EXPIRED
+        // =========================
+
+        if (
+
+                LocalDateTime.now()
+                        .isAfter(
+
+                                session
+                                        .getExpiresAt()
+                        )
+
+        ) {
+
+            session.setActive(false);
+
+            sessionRepository.save(
+                    session
+            );
+
+            return "Session Expired";
+        }
+
+        // =========================
+        // GENERATE NEW TOKEN
+        // =========================
+
+        String newToken =
+
+                UUID.randomUUID()
+                        .toString();
+
+        session.setQrToken(
+                newToken
+        );
+
+        sessionRepository.save(
+                session
+        );
+
+        return session;
+    }
 }

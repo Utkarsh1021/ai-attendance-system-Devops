@@ -38,4 +38,14 @@ public interface AttendanceRepository
 
             String sessionId
     );
+
+    // =========================
+    // GET ATTENDANCE BY SESSION
+    // =========================
+
+    List<Attendance>
+    findBySessionId(
+
+            String sessionId
+    );
 }
