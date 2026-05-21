@@ -5,24 +5,37 @@ import com.utkarsh.attendance_system.entity.Attendance;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+
 import java.util.List;
 
 public interface AttendanceRepository
         extends JpaRepository<Attendance, Long> {
 
-    // =========================
-    // FIND BY REGISTRATION NUMBER
-    // =========================
-
-    List<Attendance> findByRegistrationNumber(
+    List<Attendance>
+    findByRegistrationNumber(
             String registrationNumber
     );
 
+    List<Attendance>
+    findByDate(
+            LocalDate date
+    );
+
+    boolean existsByRegistrationNumberAndDate(
+
+            String registrationNumber,
+
+            LocalDate date
+    );
+
     // =========================
-    // FIND BY DATE
+    // SESSION ATTENDANCE CHECK
     // =========================
 
-    List<Attendance> findByDate(
-            LocalDate date
+    boolean existsByRegistrationNumberAndSessionId(
+
+            String registrationNumber,
+
+            String sessionId
     );
 }

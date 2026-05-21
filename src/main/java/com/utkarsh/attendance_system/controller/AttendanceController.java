@@ -1,16 +1,21 @@
 package com.utkarsh.attendance_system.controller;
 
 import com.utkarsh.attendance_system.entity.Attendance;
+
 import com.utkarsh.attendance_system.repository.AttendanceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+
 import java.time.LocalTime;
+
 import java.util.List;
 
 @RestController
+
 @RequestMapping("/attendance")
 
 @CrossOrigin(origins = "*")
@@ -18,24 +23,85 @@ import java.util.List;
 public class AttendanceController {
 
     @Autowired
-    private AttendanceRepository attendanceRepository;
+    private AttendanceRepository
+            attendanceRepository;
 
     // =========================
     // MARK ATTENDANCE
     // =========================
 
     @PostMapping("/mark")
-    public Attendance markAttendance(
-            @RequestBody Attendance attendance
+    public Object markAttendance(
+
+            @RequestBody
+            Attendance attendance
+
     ) {
 
-        attendance.setDate(LocalDate.now());
+        // =========================
+        // CURRENT DATE
+        // =========================
 
-        attendance.setTime(LocalTime.now());
+        LocalDate today =
+                LocalDate.now();
 
-        attendance.setStatus("Present");
+        // =========================
+        // CHECK DUPLICATE
+        // SAME SESSION
+        // =========================
 
-        return attendanceRepository.save(attendance);
+        boolean alreadyMarked =
+
+                attendanceRepository
+                        .existsByRegistrationNumberAndSessionId(
+
+                                attendance
+                                        .getRegistrationNumber(),
+
+                                attendance
+                                        .getSessionId()
+                        );
+
+        // =========================
+        // IF ALREADY MARKED
+        // =========================
+
+        if (alreadyMarked) {
+
+            return "Attendance already marked for this session";
+        }
+
+        // =========================
+        // SET DATE
+        // =========================
+
+        attendance.setDate(
+                today
+        );
+
+        // =========================
+        // SET TIME
+        // =========================
+
+        attendance.setTime(
+                LocalTime.now()
+        );
+
+        // =========================
+        // SET STATUS
+        // =========================
+
+        attendance.setStatus(
+                "Present"
+        );
+
+        // =========================
+        // SAVE ATTENDANCE
+        // =========================
+
+        return attendanceRepository.save(
+                attendance
+        );
     }
 
     // =========================
@@ -43,7 +109,8 @@ public class AttendanceController {
     // =========================
 
     @GetMapping
-    public List<Attendance> getAttendance() {
+    public List<Attendance>
+    getAttendance() {
 
         return attendanceRepository.findAll();
     }
@@ -54,11 +121,16 @@ public class AttendanceController {
 
     @GetMapping("/{id}")
     public Attendance getAttendanceById(
-            @PathVariable Long id
+
+            @PathVariable
+            Long id
+
     ) {
 
         return attendanceRepository
+
                 .findById(id)
+
                 .orElse(null);
     }
 
@@ -67,7 +139,8 @@ public class AttendanceController {
     // =========================
 
     @GetMapping("/student/{registrationNumber}")
-    public List<Attendance> getAttendanceByStudent(
+    public List<Attendance>
+    getAttendanceByStudent(
 
             @PathVariable
             String registrationNumber
@@ -75,6 +148,7 @@ public class AttendanceController {
     ) {
 
         return attendanceRepository
+
                 .findByRegistrationNumber(
                         registrationNumber
                 );
@@ -85,7 +159,8 @@ public class AttendanceController {
     // =========================
 
     @GetMapping("/date/{date}")
-    public List<Attendance> getAttendanceByDate(
+    public List<Attendance>
+    getAttendanceByDate(
 
             @PathVariable
             LocalDate date
@@ -112,10 +187,14 @@ public class AttendanceController {
 
     @DeleteMapping("/{id}")
     public String deleteAttendance(
-            @PathVariable Long id
+
+            @PathVariable
+            Long id
+
     ) {
 
-        attendanceRepository.deleteById(id);
+        attendanceRepository
+                .deleteById(id);
 
         return "Attendance Deleted Successfully";
     }

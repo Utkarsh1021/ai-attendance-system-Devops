@@ -3,6 +3,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import "./App.css";
 import AdminDashboard from "./components/AdminDashboard";
+import FacultySession from "./components/FacultySession";
+import {
+
+    BrowserRouter,
+
+    Routes,
+
+    Route
+
+} from "react-router-dom";
+
+import MarkAttendancePage from "./components/MarkAttendancePage";
 
 // Smooth scroll setup
 if (typeof window !== 'undefined') {
@@ -756,6 +768,32 @@ function App() {
   };
 
   return (
+    <BrowserRouter>
+
+    <Routes>
+
+      {/* =========================
+          QR ATTENDANCE PAGE
+      ========================= */}
+
+      <Route
+
+        path="/mark-attendance"
+
+        element={
+          <MarkAttendancePage />
+        }
+      />
+
+      {/* =========================
+          MAIN APP
+      ========================= */}
+
+      <Route
+
+        path="/"
+
+        element={
     <>
       {/* Navigation */}
       <motion.nav 
@@ -1338,7 +1376,14 @@ function App() {
           <AdminDashboard />
         )
       }
+      <FacultySession />
     </>
+    }
+    />
+
+    </Routes>
+
+  </BrowserRouter>
   );
 }
 

@@ -22,6 +22,8 @@ public class Attendance {
 
     private String status;
 
+    private String sessionId;
+
     // =========================
     // GETTERS AND SETTERS
     // =========================
@@ -72,5 +74,15 @@ public class Attendance {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(
+        String sessionId
+    ) {
+        this.sessionId = sessionId;
     }
 }
