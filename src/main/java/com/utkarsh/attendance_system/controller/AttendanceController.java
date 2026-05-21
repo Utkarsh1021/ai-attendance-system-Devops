@@ -14,6 +14,14 @@ import java.time.LocalTime;
 
 import java.util.List;
 
+import com.utkarsh.attendance_system.entity.Student;
+
+import com.utkarsh.attendance_system.entity.AttendanceSession;
+
+import com.utkarsh.attendance_system.repository.StudentRepository;
+
+import com.utkarsh.attendance_system.repository.AttendanceSessionRepository;
+
 @RestController
 
 @RequestMapping("/attendance")
@@ -26,6 +34,13 @@ public class AttendanceController {
     private AttendanceRepository
             attendanceRepository;
 
+        @Autowired
+        private StudentRepository
+                studentRepository;
+
+        @Autowired
+        private AttendanceSessionRepository
+                sessionRepository;
     // =========================
     // MARK ATTENDANCE
     // =========================
@@ -44,6 +59,70 @@ public class AttendanceController {
 
         LocalDate today =
                 LocalDate.now();
+
+
+        // =========================
+// FETCH STUDENT
+// =========================
+
+Student student =
+
+        studentRepository
+                .findByRegistrationNumber(
+
+                        attendance
+                                .getRegistrationNumber()
+                );
+
+// =========================
+// STUDENT NOT FOUND
+// =========================
+
+if (student == null) {
+
+    return "Student Not Found";
+}
+
+// =========================
+// FETCH SESSION
+// =========================
+
+AttendanceSession session =
+
+        sessionRepository
+                .findBySessionId(
+
+                        attendance
+                                .getSessionId()
+                )
+
+                .orElse(null);
+
+        // =========================
+        // SESSION NOT FOUND
+        // =========================
+
+        if (session == null) {
+
+                return "Invalid Session";
+        }
+
+        // =========================
+        // SECTION VALIDATION
+        // =========================
+
+        if (
+
+                !student.getSection()
+                        .equalsIgnoreCase(
+
+                                session.getSection()
+                        )
+
+        ) {
+
+                return "You are not authorized for this section";
+        }
 
         // =========================
         // CHECK DUPLICATE

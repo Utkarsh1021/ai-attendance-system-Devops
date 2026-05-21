@@ -194,8 +194,37 @@ const MarkAttendancePage = () => {
                     console.log(
                         attendanceResponse.data
                     );
+                    // =========================
+                    // HANDLE STRING RESPONSES
+                    // =========================
+
+                    if (
+
+                        typeof attendanceResponse.data
+                        === "string"
+
+                    ) {
+
+                        setMessage(
+                            attendanceResponse.data
+                        );
+
+                        alert(
+                            attendanceResponse.data
+                        );
+
+                        return;
+                    }
+
+                    // =========================
+                    // SUCCESS
+                    // =========================
 
                     setMessage(
+                        "Attendance Marked Successfully"
+                    );
+
+                    alert(
                         "Attendance Marked Successfully"
                     );
 

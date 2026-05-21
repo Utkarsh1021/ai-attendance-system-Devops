@@ -37,6 +37,14 @@ const FacultySession = () => {
         setSession] =
         useState(null);
 
+    const [
+
+        sessionExpired,
+
+        setSessionExpired
+
+    ] = useState(false);
+
 
     useEffect(() => {
 
@@ -58,9 +66,31 @@ const FacultySession = () => {
                                 `http://localhost:8082/session/refresh-token?sessionId=${session.sessionId}`
                             );
 
-                        console.log(
-                            response.data
-                        );
+                            // =========================
+                            // SESSION EXPIRED
+                            // =========================
+
+                            if (
+
+                                response.data ===
+                                    "Session Expired"
+
+                            ) {
+
+                                setSessionExpired(
+                                    true
+                            );
+
+                            clearInterval(
+                                interval
+                            );
+
+                            return;
+                        }
+
+                        // =========================
+                        // UPDATE TOKEN
+                        // =========================
 
                         setSession(
 
@@ -79,7 +109,6 @@ const FacultySession = () => {
                             error
                         );
                     }
-
                 },
 
                 4000
@@ -236,13 +265,37 @@ const FacultySession = () => {
                             Scan QR For Attendance
                         </h2>
 
-                        <QRCode
+                        {
 
-                            value={
+    sessionExpired && (
 
-                                `http://localhost:3000/mark-attendance?sessionId=${session.sessionId}&token=${session.qrToken}`
-                            }
-                        />
+        <h2
+            style={{
+                color: "red"
+            }}
+        >
+
+            Session Expired
+
+        </h2>
+    )
+}
+
+{
+
+    !sessionExpired && (
+
+        <QRCode
+
+            value={
+
+                `http://localhost:3000/mark-attendance?sessionId=${session.sessionId}&token=${session.qrToken}`
+            }
+        />
+    )
+}
+
+    
 
                         <br />
                         <br />
