@@ -52,11 +52,24 @@ const FacultyLiveDashboard = (
 
                     try {
 
+                        const token =
+
+                            localStorage.getItem(
+                                "facultyToken"
+                            );
+
                         const response =
 
                             await axios.get(
 
-                                `http://localhost:8082/attendance/session/${sessionId}`
+                                `http://localhost:8082/attendance/session/${sessionId}`,
+                                {
+                                    headers: {
+
+                                        Authorization:
+                                            `Bearer ${token}`
+                                    }
+                                }
                             );
 
                         setAttendance(

@@ -58,12 +58,28 @@ const FacultySession = () => {
                 async () => {
 
                     try {
+                        const token =
+
+                            localStorage.getItem(
+                                "facultyToken"
+                            );
 
                         const response =
 
                             await axios.get(
 
-                                `http://localhost:8082/session/refresh-token?sessionId=${session.sessionId}`
+                                `http://localhost:8082/session/refresh-token?sessionId=${session.sessionId}`,
+
+                                {
+
+                                    headers: {
+
+                                        Authorization:
+                                            `Bearer ${token}`
+                                    }
+                                }
+
+
                             );
 
                             // =========================
@@ -94,13 +110,30 @@ const FacultySession = () => {
 
                         setSession(
 
-                            prev => ({
+                            prev => {
 
-                                ...prev,
+                                console.log(
 
-                                qrToken:
+                                    "OLD TOKEN:",
+
+                                    prev.qrToken
+                                );
+
+                                console.log(
+
+                                    "NEW TOKEN:",
+
                                     response.data.qrToken
-                            })
+                                );
+
+                                return {
+
+                                    ...prev,
+
+                                    qrToken:
+                                        response.data.qrToken
+                                };
+                            }
                         );
 
                     } catch (error) {
@@ -130,6 +163,11 @@ const FacultySession = () => {
 
             try {
 
+                const token =
+                    localStorage.getItem(
+                        "facultyToken"
+                    );
+
                 const response =
                     await axios.post(
 
@@ -142,6 +180,13 @@ const FacultySession = () => {
                             section,
 
                             facultyName
+                        },{
+
+                            headers: {
+
+                                Authorization:
+                                    `Bearer ${token}`
+                            }
                         }
                     );
 

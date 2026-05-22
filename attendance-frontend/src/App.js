@@ -4,6 +4,7 @@ import axios from "axios";
 import "./App.css";
 import AdminDashboard from "./components/AdminDashboard";
 import FacultySession from "./components/FacultySession";
+import FacultyLogin from "./components/FacultyLogin";
 import {
 
     BrowserRouter,
@@ -15,6 +16,10 @@ import {
 } from "react-router-dom";
 
 import MarkAttendancePage from "./components/MarkAttendancePage";
+
+import FacultyRegister from "./components/FacultyRegister";
+
+import FacultyAuth from "./components/FacultyAuth";
 
 // Smooth scroll setup
 if (typeof window !== 'undefined') {
@@ -1376,7 +1381,9 @@ function App() {
           <AdminDashboard />
         )
       }
-      <FacultySession />
+      {/*<FacultyRegister />*/}
+      {/*//<FacultyLogin />*/}
+      <FacultyAuth />
     </>
     }
     />

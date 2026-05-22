@@ -79,9 +79,22 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        
+                        .requestMatchers(
+
+                                "/auth/**",
+
+                                "/students/**",
+
+                                "/faculty/login",
+
+                                "/faculty/register"
+
+                        ).permitAll()
+
                         .anyRequest()
 
-                        .permitAll()
+                        //.permitAll()
 
                         // PUBLIC ROUTES
 
@@ -105,7 +118,7 @@ public class SecurityConfig {
 
                         //.anyRequest()
 
-                        //.authenticated()
+                        .authenticated()
                 )
 
                 // =========================
