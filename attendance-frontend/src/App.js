@@ -71,6 +71,27 @@ const scaleIn = {
 function App() {
 
   // =========================
+  // ROLE SELECTION STATE
+  // =========================
+
+  const [selectedRole, setSelectedRole] = useState(null); // 'student', 'faculty', 'admin', null
+
+  // Check URL parameters for role selection
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roleParam = urlParams.get('role');
+    if (roleParam === 'admin' || roleParam === 'student') {
+      setSelectedRole(roleParam);
+    }
+  }, []);
+
+  // =========================
+  // STUDENT AUTH MODE
+  // =========================
+
+  const [studentAuthMode, setStudentAuthMode] = useState('login'); // 'login' or 'register'
+
+  // =========================
   // LOGIN STATES
   // =========================
 
@@ -136,6 +157,10 @@ function App() {
     setStudents]
     = useState([]);
 
+  const [studentAttendance,
+    setStudentAttendance]
+    = useState([]);
+
   // =========================
   // CAMERA STATES
   // =========================
@@ -177,11 +202,11 @@ function App() {
 
     if (storedStudent) {
 
-      setLoggedInStudent(
-        JSON.parse(
-          storedStudent
-        )
-      );
+      const student = JSON.parse(storedStudent);
+      setLoggedInStudent(student);
+      
+      // Fetch student's attendance history
+      fetchStudentAttendance(student.registrationNumber);
     }
 
     fetchStudents();
@@ -205,6 +230,28 @@ function App() {
 
       console.error(
         "Error fetching students:",
+        error
+      );
+    }
+  };
+
+  const fetchStudentAttendance = async (registrationNumber) => {
+
+    try {
+
+      const response =
+        await axios.get(
+          `http://localhost:8082/attendance/student/${registrationNumber}`
+        );
+
+      setStudentAttendance(
+        response.data
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error fetching attendance:",
         error
       );
     }
@@ -244,6 +291,9 @@ function App() {
           response.data
         )
       );
+
+      // Fetch student's attendance history
+      fetchStudentAttendance(response.data.registrationNumber);
 
     } catch (error) {
 
@@ -422,6 +472,8 @@ function App() {
     setLoggedInStudent(
       null
     );
+
+    setStudentAttendance([]);
 
     setMessage(
       "Logged Out"
@@ -829,7 +881,7 @@ function App() {
       </motion.nav>
 
       {/* Hero Section */}
-      {!loggedInStudent && (
+      {!loggedInStudent && !adminToken && (
         <motion.section 
           className="hero"
           initial="hidden"
@@ -845,6 +897,67 @@ function App() {
             Next-generation attendance powered by facial recognition AI.
             Secure, instant, effortless.
           </motion.p>
+        </motion.section>
+      )}
+
+      {/* Role Selection Section - Appears on scroll */}
+      {!loggedInStudent && !adminToken && !selectedRole && (
+        <motion.section 
+          className="role-selection"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+        >
+          <motion.h2 className="role-selection__title" variants={fadeInUp}>
+            Choose Your
+            <br />
+            <span className="role-selection__accent">Role</span>
+          </motion.h2>
+
+          <motion.div className="role-cards" variants={staggerContainer}>
+            <motion.div 
+              className="role-card"
+              variants={scaleIn}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setSelectedRole('student')}
+            >
+              <div className="role-card__icon">👨‍🎓</div>
+              <h3 className="role-card__title">Student</h3>
+              <p className="role-card__description">
+                Mark attendance using facial recognition
+              </p>
+            </motion.div>
+
+            <motion.div 
+              className="role-card"
+              variants={scaleIn}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => window.location.href = '/faculty'}
+            >
+              <div className="role-card__icon">👨‍🏫</div>
+              <h3 className="role-card__title">Faculty</h3>
+              <p className="role-card__description">
+                Create sessions and manage attendance
+              </p>
+            </motion.div>
+
+            <motion.div 
+              className="role-card"
+              variants={scaleIn}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setSelectedRole('admin')}
+            >
+              <div className="role-card__icon">👨‍💼</div>
+              <h3 className="role-card__title">Admin</h3>
+              <p className="role-card__description">
+                Manage system and view analytics
+              </p>
+            </motion.div>
+          </motion.div>
         </motion.section>
       )}
 
@@ -870,8 +983,8 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* Authentication Section */}
-      {!loggedInStudent && (
+      {/* Authentication Section - Student */}
+      {!loggedInStudent && selectedRole === 'student' && (
         <section className="section">
           <motion.div
             initial="hidden"
@@ -879,214 +992,241 @@ function App() {
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
           >
-            {/* Signup Form */}
-            <motion.div variants={fadeInUp}>
-              <h2 className="section__title">Create Account</h2>
-              <p className="section__subtitle">
-                Register to access the AI-powered attendance system
-              </p>
+            {/* Back Button */}
+            <motion.button
+              className="btn btn--back"
+              onClick={() => setSelectedRole(null)}
+              variants={fadeInUp}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              ← Back to Role Selection
+            </motion.button>
 
-              <form className="form" onSubmit={handleSignup}>
-                <div className="form__group">
-                  <input
-                    type="text"
-                    className="form__input"
-                    placeholder="Registration Number"
-                    value={signupData.registrationNumber}
-                    onChange={(e) =>
-                      setSignupData({
-                        ...signupData,
-                        registrationNumber: e.target.value
-                      })
-                    }
-                    required
-                  />
-                </div>
+            {/* Toggle Between Login and Register */}
+            <motion.div className="auth-toggle" variants={fadeInUp}>
+              <button
+                className={`auth-toggle__btn ${studentAuthMode === 'login' ? 'auth-toggle__btn--active' : ''}`}
+                onClick={() => setStudentAuthMode('login')}
+              >
+                Sign In
+              </button>
+              <button
+                className={`auth-toggle__btn ${studentAuthMode === 'register' ? 'auth-toggle__btn--active' : ''}`}
+                onClick={() => setStudentAuthMode('register')}
+              >
+                Register
+              </button>
+            </motion.div>
 
-                <div className="form__group">
-                  <input
-                    type="password"
-                    className="form__input"
-                    placeholder="Password"
-                    value={signupData.password}
-                    onChange={(e) =>
-                      setSignupData({
-                        ...signupData,
-                        password: e.target.value
-                      })
-                    }
-                    required
-                  />
-                </div>
+            {/* Register Form */}
+            {studentAuthMode === 'register' && (
+              <motion.div 
+                key="register-form"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+              >
+                <h2 className="section__title">Create Account</h2>
+                <p className="section__subtitle">
+                  Register to access the AI-powered attendance system
+                </p>
 
-                <div className="form__group">
-                  <input
-                    type="text"
-                    className="form__input"
-                    placeholder="Full Name"
-                    value={signupData.name}
-                    onChange={(e) =>
-                      setSignupData({
-                        ...signupData,
-                        name: e.target.value
-                      })
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="form__group">
-                  <input
-                    type="email"
-                    className="form__input"
-                    placeholder="Email Address"
-                    value={signupData.email}
-                    onChange={(e) =>
-                      setSignupData({
-                        ...signupData,
-                        email: e.target.value
-                      })
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="form__group">
-                  <input
-                    type="text"
-                    className="form__input"
-                    placeholder="Section"
-                    value={signupData.section}
-                    onChange={(e) =>
-                      setSignupData({
-                        ...signupData,
-                        section: e.target.value
-                      })
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="form__group">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="form__input"
-                    onChange={(e) => {
-                      const file = 
-                        e.target.files[0];
-                      const reader =
-                        new FileReader();
-                      reader.onloadend = () => {
-                        setSignupFace(
-                          reader.result
-                        );
-                      };
-                      if (file) {
-                        reader.readAsDataURL(
-                          file
-                        );
+                <form className="form" onSubmit={handleSignup}>
+                  <div className="form__group">
+                    <input
+                      type="text"
+                      className="form__input"
+                      placeholder="Registration Number"
+                      value={signupData.registrationNumber}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          registrationNumber: e.target.value
+                        })
                       }
-                    }}
-                    
-                  />
+                      required
+                    />
+                  </div>
 
-                </div>
-                <motion.button
-                  type="button"
-                  className="btn btn--secondary"
-                  onClick={
-                    startSignupCamera
-                  }
-                  whileHover={{scale: 1.02}}
-                  whileTap={{scale: 0.98}}
-                >Register Your Face
-                </motion.button>
+                  <div className="form__group">
+                    <input
+                      type="password"
+                      className="form__input"
+                      placeholder="Password"
+                      value={signupData.password}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          password: e.target.value
+                        })
+                      }
+                      required
+                    />
+                  </div>
 
-                {
-                  signupCameraOn && (
+                  <div className="form__group">
+                    <input
+                      type="text"
+                      className="form__input"
+                      placeholder="Full Name"
+                      value={signupData.name}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          name: e.target.value
+                        })
+                      }
+                      required
+                    />
+                  </div>
 
-                    <div
-                      className="camera"
-                    >
+                  <div className="form__group">
+                    <input
+                      type="email"
+                      className="form__input"
+                      placeholder="Email Address"
+                      value={signupData.email}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          email: e.target.value
+                        })
+                      }
+                      required
+                    />
+                  </div>
 
+                  <div className="form__group">
+                    <input
+                      type="text"
+                      className="form__input"
+                      placeholder="Section"
+                      value={signupData.section}
+                      onChange={(e) =>
+                        setSignupData({
+                          ...signupData,
+                          section: e.target.value
+                        })
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="form__group">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="form__input"
+                      onChange={(e) => {
+                        const file = 
+                          e.target.files[0];
+                        const reader =
+                          new FileReader();
+                        reader.onloadend = () => {
+                          setSignupFace(
+                            reader.result
+                          );
+                        };
+                        if (file) {
+                          reader.readAsDataURL(
+                            file
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <motion.button
+                    type="button"
+                    className="btn btn--secondary"
+                    onClick={startSignupCamera}
+                    whileHover={{scale: 1.02}}
+                    whileTap={{scale: 0.98}}
+                  >
+                    Register Your Face
+                  </motion.button>
+
+                  {signupCameraOn && (
+                    <div className="camera">
                       <video
-
                         ref={signupVideoRef}
-
                         autoPlay
-
                         className="camera__video"
                       />
-
                       <motion.button
                         type="button"
                         className="btn btn--primary"
-                        onClick={
-                          captureSignupFace
-                        }
+                        onClick={captureSignupFace}
                         whileHover={{scale: 1.02}}
                         whileTap={{scale: 0.98}}
                       >
                         Capture Face
                       </motion.button>
                     </div>
-                  )
-                }
+                  )}
 
-                <motion.button
-                  type="submit"
-                  className="btn btn--primary"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Create Account
-                </motion.button>
-              </form>
-            </motion.div>
-
-            <div className="divider"></div>
+                  <motion.button
+                    type="submit"
+                    className="btn btn--primary"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Create Account
+                  </motion.button>
+                </form>
+              </motion.div>
+            )}
 
             {/* Login Form */}
-            <motion.div variants={fadeInUp}>
-              <h2 className="section__title">Sign In</h2>
-              <p className="section__subtitle">
-                Access your account to mark attendance
-              </p>
+            {studentAuthMode === 'login' && (
+              <motion.div 
+                key="login-form"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+              >
+                <h2 className="section__title">Sign In</h2>
+                <p className="section__subtitle">
+                  Access your account to mark attendance
+                </p>
 
-              <form className="form" onSubmit={handleLogin}>
-                <div className="form__group">
-                  <input
-                    type="text"
-                    className="form__input"
-                    placeholder="Registration Number"
-                    value={registrationNumber}
-                    onChange={(e) => setRegistrationNumber(e.target.value)}
-                    required
-                  />
-                </div>
+                <form className="form" onSubmit={handleLogin}>
+                  <div className="form__group">
+                    <input
+                      type="text"
+                      className="form__input"
+                      placeholder="Registration Number"
+                      value={registrationNumber}
+                      onChange={(e) => setRegistrationNumber(e.target.value)}
+                      required
+                    />
+                  </div>
 
-                <div className="form__group">
-                  <input
-                    type="password"
-                    className="form__input"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
+                  <div className="form__group">
+                    <input
+                      type="password"
+                      className="form__input"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
 
-                <motion.button
-                  type="submit"
-                  className="btn btn--primary"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Sign In
-                </motion.button>
-              </form>
-            </motion.div>
+                  <motion.button
+                    type="submit"
+                    className="btn btn--primary"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Sign In
+                  </motion.button>
+                </form>
+              </motion.div>
+            )}
           </motion.div>
         </section>
       )}
@@ -1199,6 +1339,62 @@ function App() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Student Attendance History */}
+          <motion.div
+            className="attendance-history"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <h2 className="section__title">My Attendance History</h2>
+            <p className="section__subtitle">
+              Total Present: {studentAttendance.length} days
+            </p>
+
+            {studentAttendance.length === 0 ? (
+              <div className="attendance-history__empty">
+                <p>No attendance records found</p>
+              </div>
+            ) : (
+              <div className="table-container">
+                <table className="table">
+                  <thead className="table__head">
+                    <tr>
+                      <th className="table__header">Date</th>
+                      <th className="table__header">Time</th>
+                      <th className="table__header">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {studentAttendance.map((record, index) => (
+                      <motion.tr
+                        key={record.id}
+                        className="table__row"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ 
+                          duration: 0.5,
+                          delay: index * 0.05,
+                          ease: [0.16, 1, 0.3, 1]
+                        }}
+                      >
+                        <td className="table__cell">{record.date}</td>
+                        <td className="table__cell">{record.time}</td>
+                        <td className="table__cell">
+                          <span className="status-badge status-badge--present">
+                            {record.status}
+                          </span>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </motion.div>
         </motion.section>
       )}
 
@@ -1208,221 +1404,170 @@ function App() {
           ADMIN AUTH SECTION
         ========================= */}
 
-      <section className="section">
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{
-          once: true
-          }}
-          variants={staggerContainer}
-        >
-
-          <motion.h2
-            className="section__title"
-            variants={fadeInUp}
+      {!adminToken && selectedRole === 'admin' && (
+        <section className="section">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
           >
-            Admin Access
-          </motion.h2>
+            {/* Back Button */}
+            <motion.button
+              className="btn btn--back"
+              onClick={() => setSelectedRole(null)}
+              variants={fadeInUp}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              ← Back to Role Selection
+            </motion.button>
 
-          {
+            <motion.h2
+              className="section__title"
+              variants={fadeInUp}
+            >
+              Admin Access
+            </motion.h2>
 
-            !adminToken ? (
-
-              <form
-                className="form"
-                onSubmit={
-                  handleAdminLogin
-                }
-              >
-
+            <form
+              className="form"
+              onSubmit={handleAdminLogin}
+            >
+              <motion.div variants={fadeInUp}>
                 <div className="form__group">
-
                   <input
                     type="text"
-
                     className="form__input"
-
                     placeholder="Admin Username"
-
                     value={adminUsername}
-
                     onChange={(e) =>
-                      setAdminUsername(
-                        e.target.value
-                      )
+                      setAdminUsername(e.target.value)
                     }
-
                     required
                   />
-
                 </div>
 
                 <div className="form__group">
-
                   <input
                     type="password"
-
                     className="form__input"
-
                     placeholder="Admin Password"
-
                     value={adminPassword}
-
                     onChange={(e) =>
-                      setAdminPassword(
-                        e.target.value
-                      )
+                      setAdminPassword(e.target.value)
                     }
-
                     required
                   />
-
                 </div>
 
                 <motion.button
-
                   type="submit"
-
                   className="btn btn--primary"
-
-                  whileHover={{
-                    scale: 1.02
-                  }}
-
-                  whileTap={{
-                    scale: 0.98
-                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   Admin Login
                 </motion.button>
+              </motion.div>
+            </form>
+          </motion.div>
+        </section>
+      )}
 
-              </form>
+      {/* Admin Dashboard */}
+      {adminToken && (
+        <AdminDashboard />
+      )}
 
-            ) : (
-
-              <div
-                style={{
-                  textAlign: "center"
-                }}
-              >
-
-                <motion.a
-                  href="/admin"
-                  className="btn btn--primary"
-                  whileHover={{
-                    scale: 1.02
-                  }}
-                  whileTap={{
-                    scale: 0.98
-                  }}
-                  style={{
-                    display: 'inline-block',
-                    textDecoration: 'none'
-                  }}
-                >
-                  Go to Admin Dashboard
-                </motion.a>
-
-                <motion.button
-
-                  className="btn btn--secondary"
-
-                  onClick={
-                    handleAdminLogout
-                  }
-
-                  whileHover={{
-                    scale: 1.02
-                  }}
-
-                  whileTap={{
-                    scale: 0.98
-                  }}
-                  style={{
-                    marginLeft: '1rem'
-                  }}
-                >
-                  Admin Logout
-                </motion.button>
-
-              </div>
-            )
-          }
-
-        </motion.div>
-
-      </section>
-
-      {/* Students List Section */}
-      <section className="section section--compact">
-        <motion.div
+      {/* Footer Section - Developer Info & Quotes */}
+      {!loggedInStudent && !adminToken && (
+        <motion.section 
+          className="footer-section"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
         >
-          <motion.h2 className="section__title" variants={fadeInUp}>
-            Registered Students
-          </motion.h2>
-
-          <motion.div style={{ marginBottom: 'var(--space-md)' }} variants={fadeInUp}>
-            <motion.a
-              href="/faculty"
-              className="btn btn--secondary"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              style={{
-                display: 'inline-block',
-                textDecoration: 'none'
-              }}
-            >
-              Faculty Portal →
-            </motion.a>
+          {/* Inspirational Quote */}
+          <motion.div className="footer-quote" variants={fadeInUp}>
+            <p className="footer-quote__text">
+              "The future belongs to those who believe in the beauty of their dreams."
+            </p>
+            <p className="footer-quote__author">— Eleanor Roosevelt</p>
           </motion.div>
 
-          <motion.div className="table-container" variants={fadeInUp}>
-            <table className="table">
-              <thead className="table__head">
-                <tr>
-                  <th className="table__header">ID</th>
-                  <th className="table__header">Registration No</th>
-                  <th className="table__header">Name</th>
-                  <th className="table__header">Email</th>
-                  <th className="table__header">Section</th>
-                  <th className="table__header">Face Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student, index) => (
-                  <motion.tr
-                    key={student.id}
-                    className="table__row"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ 
-                      duration: 0.5, 
-                      delay: index * 0.05,
-                      ease: [0.16, 1, 0.3, 1] 
-                    }}
-                  >
-                    <td className="table__cell">{student.id}</td>
-                    <td className="table__cell">{student.registrationNumber}</td>
-                    <td className="table__cell">{student.name}</td>
-                    <td className="table__cell">{student.email}</td>
-                    <td className="table__cell">{student.section}</td>
-                    <td className="table__cell">
-                      {student.faceEncodingPath ? '✓ Registered' : '— Pending'}
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Developer Section */}
+          <motion.div className="footer-developer" variants={fadeInUp}>
+            <h2 className="footer-developer__title">
+              Built With
+              <br />
+              <span className="footer-developer__accent">Passion</span>
+            </h2>
+            
+            <div className="footer-developer__content">
+              <motion.div className="footer-developer__info" variants={scaleIn}>
+                <h3 className="footer-developer__name">Utkarsh Raj</h3>
+                <p className="footer-developer__role">Full Stack Developer</p>
+                <p className="footer-developer__description">
+                  Crafting innovative solutions with cutting-edge technology.
+                  Passionate about AI, machine learning, and creating seamless user experiences.
+                </p>
+              </motion.div>
+
+              <motion.div className="footer-developer__contact" variants={scaleIn}>
+                <h4 className="footer-developer__contact-title">Let's Connect</h4>
+                
+                <motion.a
+                  href="mailto:utkarshumang111@gmail.com"
+                  className="footer-contact-btn"
+                  whileHover={{ scale: 1.05, x: 10 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="footer-contact-btn__icon">✉</span>
+                  <span className="footer-contact-btn__text">MAIL</span>
+                </motion.a>
+
+                <motion.a
+                  href="mailto:https://www.linkedin.com/in/utkarshraj21/"
+                  className="footer-contact-btn"
+                  whileHover={{ scale: 1.05, x: 10 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="footer-contact-btn__icon"></span>
+                  <span className="footer-contact-btn__text">Linkedin</span>
+                </motion.a>
+
+                <motion.a
+                  href="sms:+1234567890"
+                  className="footer-contact-btn"
+                  whileHover={{ scale: 1.05, x: 10 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="footer-contact-btn__icon">📱</span>
+                  <span className="footer-contact-btn__text">Send a Message</span>
+                </motion.a>
+              </motion.div>
+            </div>
           </motion.div>
-        </motion.div>
-      </section>
+
+          {/* Additional Quote */}
+          <motion.div className="footer-quote footer-quote--secondary" variants={fadeInUp}>
+            <p className="footer-quote__text">
+              "Innovation distinguishes between a leader and a follower."
+            </p>
+            <p className="footer-quote__author">— Steve Jobs</p>
+          </motion.div>
+
+          {/* Copyright */}
+          <motion.div className="footer-copyright" variants={fadeInUp}>
+            <p>© 2026 Utkarsh Raj. All rights reserved.</p>
+            <p className="footer-copyright__tagline">
+              Powered by AI • Built with React & Spring Boot
+            </p>
+          </motion.div>
+        </motion.section>
+      )}
     </>
     }
     />

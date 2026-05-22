@@ -184,6 +184,24 @@ AttendanceSession session =
     }
 
     // =========================
+    // GET ATTENDANCE BY STUDENT
+    // =========================
+
+//     @GetMapping("/student/{registrationNumber}")
+//     public List<Attendance> getStudentAttendance(
+
+//             @PathVariable
+//             String registrationNumber
+
+//     ) {
+
+//         return attendanceRepository
+//                 .findByRegistrationNumber(
+//                         registrationNumber
+//                 );
+//     }
+
+    // =========================
     // GET ALL ATTENDANCE
     // =========================
 

@@ -368,6 +368,39 @@
    STUDENTS TABLE - Asymmetric Grid
    =================================== */
 
+.attendance-history {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.attendance-history__empty {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: rgba(250, 249, 249, 0.6);
+  font-style: italic;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  border: 1px solid #00ff88;
+}
+
+.status-badge--present {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  border: 1px solid #00ff88;
+}
+
 .table-container {
   width: 100%;
   overflow-x: auto;
@@ -446,6 +479,307 @@
 }
 
 /* ===================================
+   ROLE SELECTION SECTION
+   =================================== */
+
+.role-selection {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-xl) 8.33%;
+}
+
+.role-selection__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 10rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: var(--space-xl);
+  color: var(--color-light);
+  text-align: center;
+}
+
+.role-selection__accent {
+  color: var(--color-accent);
+  display: inline-block;
+}
+
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.role-card {
+  padding: var(--space-xl);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.4s var(--ease-expo-out);
+  text-align: center;
+}
+
+.role-card:hover {
+  border-color: var(--color-accent);
+  background: rgba(26, 26, 26, 0.8);
+}
+
+.role-card__icon {
+  font-size: 5rem;
+  margin-bottom: var(--space-md);
+  filter: grayscale(100%);
+  transition: filter 0.4s var(--ease-expo-out);
+}
+
+.role-card:hover .role-card__icon {
+  filter: grayscale(0%);
+}
+
+.role-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+  color: var(--color-light);
+}
+
+.role-card__description {
+  font-size: 1rem;
+  color: rgba(250, 249, 249, 0.6);
+  line-height: 1.5;
+}
+
+/* ===================================
+   AUTH TOGGLE
+   =================================== */
+
+.auth-toggle {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  max-width: 500px;
+}
+
+.auth-toggle__btn {
+  flex: 1;
+  padding: 0.75rem 2rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  background: transparent;
+  color: rgba(250, 249, 249, 0.6);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.4s var(--ease-expo-out);
+}
+
+.auth-toggle__btn:hover {
+  color: var(--color-light);
+  border-color: rgba(250, 249, 249, 0.3);
+}
+
+.auth-toggle__btn--active {
+  background: var(--color-accent);
+  color: var(--color-light);
+  border-color: var(--color-accent);
+}
+
+/* ===================================
+   BACK BUTTON
+   =================================== */
+
+.btn--back {
+  margin-bottom: var(--space-lg);
+  background: transparent;
+  color: rgba(250, 249, 249, 0.6);
+  border: 1px solid var(--color-border);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+}
+
+.btn--back:hover {
+  color: var(--color-light);
+  border-color: var(--color-accent);
+  background: rgba(255, 77, 0, 0.1);
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ===================================
+   FOOTER SECTION - DEVELOPER & QUOTES
+   =================================== */
+
+.footer-section {
+  min-height: 100vh;
+  padding: var(--space-xl) 8.33%;
+  background: linear-gradient(180deg, var(--color-dark) 0%, #0a0a0a 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-xl);
+}
+
+.footer-quote {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  border-left: 4px solid var(--color-accent);
+  background: rgba(26, 26, 26, 0.5);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.footer-quote__text {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-light);
+  font-style: italic;
+  margin-bottom: var(--space-md);
+}
+
+.footer-quote__author {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footer-quote--secondary {
+  border-left-color: rgba(250, 249, 249, 0.3);
+  background: transparent;
+}
+
+.footer-developer {
+  max-width: 1200px;
+  margin: var(--space-xl) auto;
+  width: 100%;
+}
+
+.footer-developer__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 10rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: var(--space-xl);
+  color: var(--color-light);
+  text-align: center;
+}
+
+.footer-developer__accent {
+  color: var(--color-accent);
+  display: inline-block;
+}
+
+.footer-developer__content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+.footer-developer__info {
+  padding: var(--space-xl);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.footer-developer__name {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-xs);
+  color: var(--color-accent);
+}
+
+.footer-developer__role {
+  font-size: 1.25rem;
+  color: rgba(250, 249, 249, 0.8);
+  margin-bottom: var(--space-md);
+  font-weight: 600;
+}
+
+.footer-developer__description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(250, 249, 249, 0.6);
+}
+
+.footer-developer__contact {
+  padding: var(--space-xl);
+  background: rgba(26, 26, 26, 0.5);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.footer-developer__contact-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+  color: var(--color-light);
+}
+
+.footer-contact-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-light);
+  text-decoration: none;
+  transition: all 0.4s var(--ease-expo-out);
+  font-family: var(--font-body);
+}
+
+.footer-contact-btn:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 77, 0, 0.1);
+}
+
+.footer-contact-btn__icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.footer-contact-btn__text {
+  font-size: 1rem;
+  color: rgba(250, 249, 249, 0.8);
+}
+
+.footer-copyright {
+  text-align: center;
+  padding: var(--space-lg) 0;
+  border-top: 1px solid var(--color-border);
+  color: rgba(250, 249, 249, 0.4);
+  font-size: 0.875rem;
+}
+
+.footer-copyright__tagline {
+  margin-top: var(--space-xs);
+  font-size: 0.75rem;
+  color: rgba(250, 249, 249, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ===================================
    RESPONSIVE
    =================================== */
 
@@ -469,6 +803,31 @@
   .section__title {
     font-size: clamp(1.75rem, 8vw, 3rem);
   }
+
+  .role-selection {
+    padding: var(--space-lg) 5%;
+  }
+
+  .role-selection__title {
+    font-size: clamp(2.5rem, 10vw, 6rem);
+  }
+
+  .role-cards {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .role-card {
+    padding: var(--space-lg);
+  }
+
+  .role-card__icon {
+    font-size: 4rem;
+  }
+
+  .auth-toggle {
+    flex-direction: column;
+  }
   
   .btn {
     padding: 1rem 2rem;
@@ -481,6 +840,36 @@
   
   .camera__controls {
     flex-direction: column;
+  }
+
+  .footer-section {
+    padding: var(--space-lg) 5%;
+  }
+
+  .footer-developer__content {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .footer-developer__info,
+  .footer-developer__contact {
+    padding: var(--space-lg);
+  }
+
+  .footer-quote {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .footer-quote__text {
+    font-size: clamp(1.25rem, 5vw, 1.75rem);
+  }
+
+  .footer-contact-btn {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .footer-contact-btn__text {
+    font-size: 0.875rem;
   }
 }
 

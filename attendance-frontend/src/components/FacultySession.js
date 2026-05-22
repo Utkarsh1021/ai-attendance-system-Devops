@@ -128,6 +128,11 @@ const FacultySession = () => {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("facultyToken");
+        window.location.href = '/faculty';
+    };
+
     return (
         <div className="faculty-session">
             {/* Navigation */}
@@ -138,9 +143,19 @@ const FacultySession = () => {
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
                 <div className="faculty-nav__logo">Faculty Portal</div>
-                <div className="faculty-nav__status">
-                    <span className="faculty-nav__status-dot"></span>
-                    <span>{session ? 'Active Session' : 'Create Session'}</span>
+                <div className="faculty-nav__actions">
+                    <div className="faculty-nav__status">
+                        <span className="faculty-nav__status-dot"></span>
+                        <span>{session ? 'Active Session' : 'Create Session'}</span>
+                    </div>
+                    <motion.button
+                        className="faculty-nav__logout"
+                        onClick={handleLogout}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        Logout
+                    </motion.button>
                 </div>
             </motion.nav>
 

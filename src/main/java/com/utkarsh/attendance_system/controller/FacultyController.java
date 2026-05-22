@@ -125,4 +125,39 @@ public class FacultyController {
 
         return token;
     }
+
+    // =========================
+    // GET ALL FACULTIES
+    // =========================
+
+    @GetMapping
+    public Object getAllFaculties() {
+
+        return facultyRepository.findAll();
+    }
+
+    // =========================
+    // DELETE FACULTY (ADMIN ONLY)
+    // =========================
+
+    @DeleteMapping("/{id}")
+    public String deleteFaculty(
+
+            @PathVariable
+            Long id
+
+    ) {
+
+        try {
+
+            facultyRepository.deleteById(id);
+
+            return "Faculty deleted successfully";
+
+        } catch (Exception e) {
+
+            return "Failed to delete faculty: "
+                    + e.getMessage();
+        }
+    }
 }

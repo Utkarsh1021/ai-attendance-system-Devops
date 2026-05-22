@@ -33,12 +33,37 @@
   color: var(--color-light);
 }
 
+.faculty-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
 .faculty-nav__status {
   font-size: 0.875rem;
   color: rgba(250, 249, 249, 0.6);
   display: flex;
   align-items: center;
   gap: var(--space-xs);
+}
+
+.faculty-nav__logout {
+  padding: 0.5rem 1.5rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-expo-out);
+}
+
+.faculty-nav__logout:hover {
+  background: var(--color-accent);
+  color: var(--color-light);
 }
 
 .faculty-nav__status-dot {

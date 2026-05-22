@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import FacultyLogin from "./FacultyLogin";
 import FacultyRegister from "./FacultyRegister";
 import "../styles/FacultyAuth.css";
 
 const FacultyAuth = () => {
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
 
     // Animation variants
@@ -54,6 +56,18 @@ const FacultyAuth = () => {
                 animate="visible"
                 variants={fadeInUp}
             >
+                {/* Back Button */}
+                <motion.button
+                    className="btn btn--back"
+                    onClick={() => navigate('/')}
+                    variants={fadeInUp}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{ marginBottom: 'var(--space-md)' }}
+                >
+                    ← Back to Role Selection
+                </motion.button>
+
                 <motion.h1 className="faculty-auth-hero__title" variants={fadeInUp}>
                     Faculty
                     <br />

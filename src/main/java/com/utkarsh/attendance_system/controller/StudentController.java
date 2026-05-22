@@ -89,4 +89,18 @@ public class StudentController {
 
         return studentRepository.findAll();
     }
+
+    // =========================
+    // DELETE STUDENT (ADMIN ONLY)
+    // =========================
+    @DeleteMapping("/{id}")
+    public String deleteStudent(@PathVariable Long id) {
+
+        try {
+            studentRepository.deleteById(id);
+            return "Student deleted successfully";
+        } catch (Exception e) {
+            return "Failed to delete student: " + e.getMessage();
+        }
+    }
 }
