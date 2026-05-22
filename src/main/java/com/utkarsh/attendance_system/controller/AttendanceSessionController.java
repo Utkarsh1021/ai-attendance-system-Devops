@@ -9,8 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 
@@ -29,7 +34,7 @@ public class AttendanceSessionController {
     // =========================
 
     @PostMapping("/create")
-    public AttendanceSession createSession(
+    public Map<String, Object> createSession(
 
             @RequestBody
             AttendanceSession session
@@ -60,20 +65,15 @@ public class AttendanceSessionController {
         // SET CREATED TIME
         // =========================
 
-        session.setCreatedAt(
-
-                LocalDateTime.now()
-        );
+        LocalDateTime now = LocalDateTime.now();
+        session.setCreatedAt(now);
 
         // =========================
-        // SET EXPIRY
+        // SET EXPIRY (2 minutes from now)
         // =========================
 
-        session.setExpiresAt(
-
-                LocalDateTime.now()
-                        .plusMinutes(2)
-        );
+        LocalDateTime expiresAt = now.plusMinutes(2);
+        session.setExpiresAt(expiresAt);
 
         // =========================
         // ACTIVE SESSION
@@ -81,9 +81,34 @@ public class AttendanceSessionController {
 
         session.setActive(true);
 
-        return sessionRepository.save(
-                session
-        );
+        AttendanceSession savedSession = sessionRepository.save(session);
+        
+        // Convert to epoch milliseconds for frontend
+        long expiresAtMillis = expiresAt
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
+        
+        // Log for debugging
+        System.out.println("Session created at: " + now);
+        System.out.println("Session expires at: " + expiresAt);
+        System.out.println("Expires at (millis): " + expiresAtMillis);
+        System.out.println("Current time (millis): " + System.currentTimeMillis());
+
+        // Return session with epoch time
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", savedSession.getId());
+        response.put("sessionId", savedSession.getSessionId());
+        response.put("subject", savedSession.getSubject());
+        response.put("section", savedSession.getSection());
+        response.put("facultyName", savedSession.getFacultyName());
+        response.put("qrToken", savedSession.getQrToken());
+        response.put("createdAt", savedSession.getCreatedAt().toString());
+        response.put("expiresAt", savedSession.getExpiresAt().toString());
+        response.put("expiresAtMillis", expiresAtMillis); // Add epoch time
+        response.put("active", savedSession.isActive());
+
+        return response;
     }
 
     // =========================
@@ -220,16 +245,16 @@ public class AttendanceSessionController {
         // SESSION EXPIRED
         // =========================
 
-        if (
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime expiryTime = session.getExpiresAt();
+        
+        // Log for debugging
+        System.out.println("Refresh token check:");
+        System.out.println("Current time: " + currentTime);
+        System.out.println("Expiry time: " + expiryTime);
+        System.out.println("Is expired: " + currentTime.isAfter(expiryTime));
 
-                LocalDateTime.now()
-                        .isAfter(
-
-                                session
-                                        .getExpiresAt()
-                        )
-
-        ) {
+        if (currentTime.isAfter(expiryTime)) {
 
             session.setActive(false);
 

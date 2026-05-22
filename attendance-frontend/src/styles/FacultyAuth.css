@@ -1,0 +1,181 @@
+/* ===================================
+   FACULTY AUTH - AUTHENTICATION PORTAL
+   =================================== */
+
+.faculty-auth {
+  min-height: 100vh;
+  background: var(--color-dark);
+  color: var(--color-light);
+}
+
+/* ===================================
+   NAVIGATION
+   =================================== */
+
+.faculty-auth-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-md) 8.33%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  background: linear-gradient(180deg, var(--color-dark) 0%, transparent 100%);
+}
+
+.faculty-auth-nav__logo {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-light);
+}
+
+.faculty-auth-nav__status {
+  font-size: 0.875rem;
+  color: rgba(250, 249, 249, 0.6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.faculty-auth-nav__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: pulse 2s var(--ease-expo-out) infinite;
+}
+
+/* ===================================
+   HERO SECTION
+   =================================== */
+
+.faculty-auth-hero {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: calc(var(--space-xl) + 60px) 8.33% var(--space-lg);
+  text-align: center;
+}
+
+.faculty-auth-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 10rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin: 0 0 var(--space-md) 0;
+  color: var(--color-light);
+  text-wrap: balance;
+}
+
+.faculty-auth-hero__accent {
+  color: var(--color-accent);
+  display: inline-block;
+}
+
+.faculty-auth-hero__subtitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.4;
+  max-width: 600px;
+  color: rgba(250, 249, 249, 0.7);
+  font-style: italic;
+}
+
+/* ===================================
+   AUTH TOGGLE - SIGNATURE MOMENT
+   =================================== */
+
+.faculty-auth-toggle {
+  display: flex;
+  justify-content: center;
+  padding: 0 8.33% var(--space-xl);
+}
+
+.faculty-auth-toggle__container {
+  position: relative;
+  display: flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem;
+  max-width: 400px;
+  width: 100%;
+}
+
+.faculty-auth-toggle__btn {
+  flex: 1;
+  padding: 1rem 2rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  background: transparent;
+  color: rgba(250, 249, 249, 0.6);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: color 0.4s var(--ease-expo-out);
+}
+
+.faculty-auth-toggle__btn--active {
+  color: var(--color-light);
+}
+
+.faculty-auth-toggle__slider {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  width: calc(50% - 0.5rem);
+  background: var(--color-accent);
+  z-index: 1;
+  transition: transform 0.4s var(--ease-expo-out);
+}
+
+/* ===================================
+   AUTH CONTENT
+   =================================== */
+
+.faculty-auth-content {
+  display: flex;
+  justify-content: center;
+  padding: 0 8.33% var(--space-xl);
+  min-height: 50vh;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media (max-width: 768px) {
+  .faculty-auth-hero {
+    padding: calc(var(--space-lg) + 60px) 5% var(--space-lg);
+  }
+  
+  .faculty-auth-toggle,
+  .faculty-auth-content {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  
+  .faculty-auth-nav {
+    padding: var(--space-sm) 5%;
+  }
+  
+  .faculty-auth-hero__title {
+    font-size: clamp(2.5rem, 10vw, 6rem);
+  }
+  
+  .faculty-auth-toggle__btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}

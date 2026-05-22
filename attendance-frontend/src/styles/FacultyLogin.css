@@ -1,0 +1,131 @@
+/* ===================================
+   FACULTY LOGIN - AUTHENTICATION FORM
+   =================================== */
+
+.faculty-login {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.faculty-login__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-xl);
+  position: relative;
+}
+
+/* ===================================
+   HEADER
+   =================================== */
+
+.faculty-login__header {
+  margin-bottom: var(--space-lg);
+  text-align: center;
+}
+
+.faculty-login__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+  color: var(--color-light);
+}
+
+.faculty-login__subtitle {
+  font-size: 1rem;
+  color: rgba(250, 249, 249, 0.6);
+  font-style: italic;
+}
+
+/* ===================================
+   FORM
+   =================================== */
+
+.faculty-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.faculty-login__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.faculty-login__label {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: rgba(250, 249, 249, 0.6);
+}
+
+.faculty-login__input {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: rgba(10, 10, 10, 0.5);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  color: var(--color-light);
+  transition: all 0.4s var(--ease-expo-out);
+  outline: none;
+}
+
+.faculty-login__input::placeholder {
+  color: rgba(250, 249, 249, 0.4);
+}
+
+.faculty-login__input:focus {
+  border-color: var(--color-accent);
+  background: rgba(10, 10, 10, 0.8);
+  transform: translateY(-2px);
+}
+
+.faculty-login__input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ===================================
+   MESSAGE
+   =================================== */
+
+.faculty-login__message {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  font-size: 0.875rem;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.faculty-login__message--success {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid #00ff88;
+  color: #00ff88;
+}
+
+.faculty-login__message--error {
+  background: rgba(255, 77, 0, 0.1);
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media (max-width: 768px) {
+  .faculty-login__card {
+    padding: var(--space-lg);
+  }
+  
+  .faculty-login__input {
+    padding: 1rem 1.25rem;
+  }
+}

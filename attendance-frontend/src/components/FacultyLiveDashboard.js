@@ -1,301 +1,209 @@
-import React,
-{
-    useEffect,
-    useState
-}
-from "react";
-
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import "../styles/FacultyLiveDashboard.css";
 
-const FacultyLiveDashboard = (
+const FacultyLiveDashboard = ({ sessionId }) => {
+    const [attendance, setAttendance] = useState([]);
+    const [registrationNumber, setRegistrationNumber] = useState("");
+    const [studentName, setStudentName] = useState("");
+    const [message, setMessage] = useState("");
 
-    { sessionId }
+    // Animation variants
+    const fadeInUp = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { 
+            opacity: 1, 
+            y: 0,
+            transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+        }
+    };
 
-) => {
+    const listItem = {
+        hidden: { opacity: 0, x: -20 },
+        visible: { 
+            opacity: 1, 
+            x: 0,
+            transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+        }
+    };
 
-    // =========================
-    // STATES
-    // =========================
-
-    const [attendance,
-        setAttendance] =
-        useState([]);
-
-    const [
-
-        registrationNumber,
-        setRegistrationNumber
-
-    ] = useState("");
-
-    const [
-
-        studentName,
-        setStudentName
-
-    ] = useState("");
-
-    // =========================
-    // FETCH LIVE ATTENDANCE
-    // =========================
-
+    // Fetch live attendance
     useEffect(() => {
+        if (!sessionId) return;
 
-        if (!sessionId)
-            return;
-
-        const interval =
-
-            setInterval(
-
-                async () => {
-
-                    try {
-
-                        const token =
-
-                            localStorage.getItem(
-                                "facultyToken"
-                            );
-
-                        const response =
-
-                            await axios.get(
-
-                                `http://localhost:8082/attendance/session/${sessionId}`,
-                                {
-                                    headers: {
-
-                                        Authorization:
-                                            `Bearer ${token}`
-                                    }
-                                }
-                            );
-
-                        setAttendance(
-                            response.data
-                        );
-
-                    } catch (error) {
-
-                        console.error(
-                            error
-                        );
+        const interval = setInterval(async () => {
+            try {
+                const token = localStorage.getItem("facultyToken");
+                const response = await axios.get(
+                    `http://localhost:8082/attendance/session/${sessionId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
                     }
+                );
 
-                },
+                setAttendance(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        }, 3000);
 
-                3000
-            );
-
-        return () =>
-            clearInterval(
-                interval
-            );
-
+        return () => clearInterval(interval);
     }, [sessionId]);
 
-    // =========================
-    // MANUAL ATTENDANCE
-    // =========================
+    // Manual attendance marking
+    const manualMarkAttendance = async () => {
+        try {
+            const response = await axios.post(
+                "http://localhost:8082/attendance/manual-mark",
+                {
+                    registrationNumber,
+                    studentName,
+                    sessionId
+                }
+            );
 
-    const manualMarkAttendance =
-        async () => {
+            setMessage("Attendance marked successfully");
+            setRegistrationNumber("");
+            setStudentName("");
 
-            try {
-
-                const response =
-
-                    await axios.post(
-
-                        "http://localhost:8082/attendance/manual-mark",
-
-                        {
-
-                            registrationNumber,
-
-                            studentName,
-
-                            sessionId
-                        }
-                    );
-
-                console.log(
-                    response.data
-                );
-
-                alert(
-                    "Attendance Marked Manually"
-                );
-
-                setRegistrationNumber(
-                    ""
-                );
-
-                setStudentName(
-                    ""
-                );
-
-            } catch (error) {
-
-                console.error(
-                    error
-                );
-            }
-        };
+            setTimeout(() => setMessage(""), 3000);
+        } catch (error) {
+            console.error(error);
+            setMessage("Failed to mark attendance");
+            setTimeout(() => setMessage(""), 3000);
+        }
+    };
 
     return (
-
-        <div
-            style={{
-                marginTop: "40px"
-            }}
-        >
-
-            <h2>
-                Live Attendance Dashboard
-            </h2>
-
-            <h3>
-
-                Present Students:
-
-                {
-                    attendance.length
-                }
-
-            </h3>
-
-            {/* =========================
-                MANUAL ATTENDANCE
-            ========================= */}
-
-            <h3>
-                Manual Attendance
-            </h3>
-
-            <input
-
-                type="text"
-
-                placeholder="Registration Number"
-
-                value={registrationNumber}
-
-                onChange={(e) =>
-
-                    setRegistrationNumber(
-                        e.target.value
-                    )
-                }
-            />
-
-            <br />
-            <br />
-
-            <input
-
-                type="text"
-
-                placeholder="Student Name"
-
-                value={studentName}
-
-                onChange={(e) =>
-
-                    setStudentName(
-                        e.target.value
-                    )
-                }
-            />
-
-            <br />
-            <br />
-
-            <button
-
-                onClick={
-                    manualMarkAttendance
-                }
+        <div className="live-dashboard">
+            {/* Stats Header */}
+            <motion.div 
+                className="live-dashboard__header"
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
             >
+                <div className="live-dashboard__stat">
+                    <div className="live-dashboard__stat-value">{attendance.length}</div>
+                    <div className="live-dashboard__stat-label">Present Students</div>
+                </div>
+                <div className="live-dashboard__stat-indicator">
+                    <span className="live-dashboard__pulse"></span>
+                    <span className="live-dashboard__pulse-label">Live Updates</span>
+                </div>
+            </motion.div>
 
-                Mark Present
-
-            </button>
-
-            <br />
-            <br />
-
-            {/* =========================
-                ATTENDANCE TABLE
-            ========================= */}
-
-            <table
-                border="1"
-                cellPadding="10"
+            {/* Manual Attendance Section */}
+            <motion.div 
+                className="live-dashboard__manual"
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
             >
+                <h3 className="live-dashboard__section-title">Manual Entry</h3>
+                <p className="live-dashboard__section-subtitle">
+                    Mark attendance manually for students without QR access
+                </p>
 
-                <thead>
+                <div className="live-dashboard__manual-form">
+                    <div className="live-dashboard__form-row">
+                        <input
+                            type="text"
+                            className="live-dashboard__input"
+                            placeholder="Registration Number"
+                            value={registrationNumber}
+                            onChange={(e) => setRegistrationNumber(e.target.value)}
+                        />
+                        <input
+                            type="text"
+                            className="live-dashboard__input"
+                            placeholder="Student Name"
+                            value={studentName}
+                            onChange={(e) => setStudentName(e.target.value)}
+                        />
+                    </div>
+                    <motion.button
+                        className="btn btn--primary"
+                        onClick={manualMarkAttendance}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        Mark Present
+                    </motion.button>
+                </div>
 
-                    <tr>
+                <AnimatePresence>
+                    {message && (
+                        <motion.div
+                            className="live-dashboard__message"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                        >
+                            {message}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.div>
 
-                        <th>
-                            Registration Number
-                        </th>
-
-                        <th>
-                            Student Name
-                        </th>
-
-                        <th>
-                            Time
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {
-
-                        attendance.map(
-
-                            (student) => (
-
-                                <tr
-                                    key={
-                                        student.id
-                                    }
-                                >
-
-                                    <td>
-                                        {
-                                            student.registrationNumber
-                                        }
-                                    </td>
-
-                                    <td>
-                                        {
-                                            student.studentName
-                                        }
-                                    </td>
-
-                                    <td>
-                                        {
-                                            student.time
-                                        }
-                                    </td>
-
+            {/* Attendance List */}
+            <motion.div 
+                className="live-dashboard__list"
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
+            >
+                <h3 className="live-dashboard__section-title">Attendance Log</h3>
+                
+                {attendance.length === 0 ? (
+                    <div className="live-dashboard__empty">
+                        <div className="live-dashboard__empty-icon">📋</div>
+                        <p className="live-dashboard__empty-text">
+                            No students have marked attendance yet
+                        </p>
+                    </div>
+                ) : (
+                    <div className="live-dashboard__table-container">
+                        <table className="live-dashboard__table">
+                            <thead className="live-dashboard__table-head">
+                                <tr>
+                                    <th className="live-dashboard__table-header">#</th>
+                                    <th className="live-dashboard__table-header">Registration No</th>
+                                    <th className="live-dashboard__table-header">Student Name</th>
+                                    <th className="live-dashboard__table-header">Time</th>
                                 </tr>
-                            )
-                        )
-                    }
-
-                </tbody>
-
-            </table>
-
+                            </thead>
+                            <tbody>
+                                <AnimatePresence>
+                                    {attendance.map((student, index) => (
+                                        <motion.tr
+                                            key={student.id}
+                                            className="live-dashboard__table-row"
+                                            variants={listItem}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="hidden"
+                                            layout
+                                        >
+                                            <td className="live-dashboard__table-cell">{index + 1}</td>
+                                            <td className="live-dashboard__table-cell live-dashboard__table-cell--highlight">
+                                                {student.registrationNumber}
+                                            </td>
+                                            <td className="live-dashboard__table-cell">{student.studentName}</td>
+                                            <td className="live-dashboard__table-cell live-dashboard__table-cell--time">
+                                                {student.time}
+                                            </td>
+                                        </motion.tr>
+                                    ))}
+                                </AnimatePresence>
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </motion.div>
         </div>
     );
 };

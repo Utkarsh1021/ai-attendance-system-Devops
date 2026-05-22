@@ -774,30 +774,37 @@ function App() {
 
   return (
     <BrowserRouter>
-
     <Routes>
+
+      {/* =========================
+          FACULTY AUTH ROUTE
+      ========================= */}
+      <Route
+        path="/faculty"
+        element={<FacultyAuth />}
+      />
 
       {/* =========================
           QR ATTENDANCE PAGE
       ========================= */}
-
       <Route
-
         path="/mark-attendance"
-
-        element={
-          <MarkAttendancePage />
-        }
+        element={<MarkAttendancePage />}
       />
 
       {/* =========================
-          MAIN APP
+          ADMIN DASHBOARD
       ========================= */}
-
       <Route
+        path="/admin"
+        element={<AdminDashboard />}
+      />
 
+      {/* =========================
+          MAIN APP (STUDENT)
+      ========================= */}
+      <Route
         path="/"
-
         element={
     <>
       {/* Navigation */}
@@ -808,10 +815,15 @@ function App() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="nav__logo">AI Attendance</div>
-        {loggedInStudent && (
+        {loggedInStudent ? (
           <div className="nav__status">
             <span className="nav__status-dot"></span>
-            <span>{loggedInStudent.name}</span>
+            <span>{cameraOn ? 'Camera Active' : loggedInStudent.name}</span>
+          </div>
+        ) : (
+          <div className="nav__status">
+            <span className="nav__status-dot"></span>
+            <span>{signupCameraOn ? 'Registering Face' : 'Student Portal'}</span>
           </div>
         )}
       </motion.nav>
@@ -1296,6 +1308,23 @@ function App() {
                 }}
               >
 
+                <motion.a
+                  href="/admin"
+                  className="btn btn--primary"
+                  whileHover={{
+                    scale: 1.02
+                  }}
+                  whileTap={{
+                    scale: 0.98
+                  }}
+                  style={{
+                    display: 'inline-block',
+                    textDecoration: 'none'
+                  }}
+                >
+                  Go to Admin Dashboard
+                </motion.a>
+
                 <motion.button
 
                   className="btn btn--secondary"
@@ -1310,6 +1339,9 @@ function App() {
 
                   whileTap={{
                     scale: 0.98
+                  }}
+                  style={{
+                    marginLeft: '1rem'
                   }}
                 >
                   Admin Logout
@@ -1334,6 +1366,21 @@ function App() {
           <motion.h2 className="section__title" variants={fadeInUp}>
             Registered Students
           </motion.h2>
+
+          <motion.div style={{ marginBottom: 'var(--space-md)' }} variants={fadeInUp}>
+            <motion.a
+              href="/faculty"
+              className="btn btn--secondary"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              style={{
+                display: 'inline-block',
+                textDecoration: 'none'
+              }}
+            >
+              Faculty Portal →
+            </motion.a>
+          </motion.div>
 
           <motion.div className="table-container" variants={fadeInUp}>
             <table className="table">
@@ -1376,14 +1423,6 @@ function App() {
           </motion.div>
         </motion.div>
       </section>
-      {
-        adminToken && (
-          <AdminDashboard />
-        )
-      }
-      {/*<FacultyRegister />*/}
-      {/*//<FacultyLogin />*/}
-      <FacultyAuth />
     </>
     }
     />
