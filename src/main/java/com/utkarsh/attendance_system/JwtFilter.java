@@ -3,11 +3,9 @@ package com.utkarsh.attendance_system.filter;
 import com.utkarsh.attendance_system.jwt.JwtUtil;
 
 import jakarta.servlet.FilterChain;
-
 import jakarta.servlet.ServletException;
 
 import jakarta.servlet.http.HttpServletRequest;
-
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,13 +19,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
 import java.util.Collections;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 @Component
-
 public class JwtFilter
         extends OncePerRequestFilter {
 
@@ -41,25 +35,76 @@ public class JwtFilter
             FilterChain filterChain
 
     ) throws ServletException, IOException {
+
+        // =========================
+        // GET REQUEST PATH
+        // =========================
+
+        String path =
+                request.getServletPath();
+
+        // =========================
+        // BYPASS PUBLIC ROUTES
+        // =========================
+
         if (
-                request.getMethod()
-                .equalsIgnoreCase(
-                        "OPTIONS"
-                )
+
+                path.startsWith("/students")
+
+                ||
+
+                path.startsWith("/attendance")
+
+                ||
+
+                path.startsWith("/faculty/login")
+
+                ||
+
+                path.startsWith("/faculty/register")
+
+                ||
+
+                path.startsWith("/auth")
 
         ) {
 
-                response.setStatus(
-                        HttpServletResponse.SC_OK
-                );
+            filterChain.doFilter(
+                    request,
+                    response
+            );
 
-                filterChain.doFilter(
-                        request,
-                        response
-                );
-
-                return;
+            return;
         }
+
+        // =========================
+        // HANDLE OPTIONS REQUEST
+        // =========================
+
+        if (
+
+                request.getMethod()
+                        .equalsIgnoreCase(
+                                "OPTIONS"
+                        )
+
+        ) {
+
+            response.setStatus(
+                    HttpServletResponse.SC_OK
+            );
+
+            filterChain.doFilter(
+                    request,
+                    response
+            );
+
+            return;
+        }
+
+        // =========================
+        // GET AUTH HEADER
+        // =========================
 
         final String authHeader =
                 request.getHeader(
@@ -71,7 +116,7 @@ public class JwtFilter
         String jwt = null;
 
         // =========================
-        // GET TOKEN
+        // EXTRACT JWT TOKEN
         // =========================
 
         if (
@@ -83,6 +128,7 @@ public class JwtFilter
                         authHeader.startsWith(
                                 "Bearer "
                         )
+
         ) {
 
             jwt =
@@ -99,6 +145,7 @@ public class JwtFilter
                     JwtUtil.validateToken(
                             jwt
                     )
+
             ) {
 
                 username =
@@ -123,6 +170,7 @@ public class JwtFilter
                                 .getAuthentication()
 
                                 == null
+
         ) {
 
             UsernamePasswordAuthenticationToken authToken =
@@ -151,6 +199,10 @@ public class JwtFilter
                             authToken
                     );
         }
+
+        // =========================
+        // CONTINUE FILTER CHAIN
+        // =========================
 
         filterChain.doFilter(
                 request,

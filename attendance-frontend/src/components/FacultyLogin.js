@@ -28,7 +28,7 @@ const FacultyLogin = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8082/faculty/login",
+                "/api/faculty/login",
                 { email, password }
             );
 

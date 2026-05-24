@@ -31,7 +31,7 @@ const FacultyRegister = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8082/faculty/register",
+                "/api/faculty/register",
                 {
                     facultyId,
                     name,

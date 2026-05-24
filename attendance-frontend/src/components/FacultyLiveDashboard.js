@@ -36,7 +36,7 @@ const FacultyLiveDashboard = ({ sessionId }) => {
             try {
                 const token = localStorage.getItem("facultyToken");
                 const response = await axios.get(
-                    `http://localhost:8082/attendance/session/${sessionId}`,
+                    `/api/attendance/session/${sessionId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -57,7 +57,7 @@ const FacultyLiveDashboard = ({ sessionId }) => {
     const manualMarkAttendance = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:8082/attendance/manual-mark",
+                "/api/attendance/manual-mark",
                 {
                     registrationNumber,
                     studentName,

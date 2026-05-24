@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/students")
 public class StudentController {
@@ -57,12 +57,29 @@ public class StudentController {
             @RequestBody Student student
     ) {
 
+
+        System.out.println(
+            "LOGIN ATTEMPT"
+        );
+
+        System.out.println(
+            student.getRegistrationNumber()
+        );
+
+        System.out.println(
+            student.getPassword()
+        );
+
         Student existingStudent =
                 studentRepository
                         .findByRegistrationNumberAndPassword(
                                 student.getRegistrationNumber(),
                                 student.getPassword()
                         );
+
+        System.out.println(
+            existingStudent
+        );
 
         if (existingStudent == null) {
 

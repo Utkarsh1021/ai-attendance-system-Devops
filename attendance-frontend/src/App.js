@@ -203,10 +203,14 @@ function App() {
     if (storedStudent) {
 
       const student = JSON.parse(storedStudent);
+      console.log('Stored student:', student);
+      console.log('Registration number:', student.registrationNumber);
       setLoggedInStudent(student);
       
       // Fetch student's attendance history
-      fetchStudentAttendance(student.registrationNumber);
+      if (student.registrationNumber) {
+        fetchStudentAttendance(student.registrationNumber);
+      }
     }
 
     fetchStudents();
@@ -219,7 +223,7 @@ function App() {
 
       const response =
         await axios.get(
-          "http://localhost:8082/students"
+          "/api/students"
         );
 
       setStudents(
@@ -238,10 +242,15 @@ function App() {
   const fetchStudentAttendance = async (registrationNumber) => {
 
     try {
+      console.log(
+        registrationNumber
+      );
+
 
       const response =
         await axios.get(
-          `http://localhost:8082/attendance/student/${registrationNumber}`
+          
+          `/api/attendance/student/${registrationNumber}`
         );
 
       setStudentAttendance(
@@ -267,41 +276,84 @@ function App() {
 
     try {
 
-      const response =
-        await axios.post(
-          "http://localhost:8082/students/login",
-          {
-            registrationNumber,
-            password
-          }
-        );
+        const response =
+            await axios.post(
 
-      setMessage(
-        "Login Successful Welcome "
-        + response.data.name
-      );
+                "/api/students/login",
 
-      setLoggedInStudent(
-        response.data
-      );
+                {
+                    registrationNumber,
+                    password
+                }
+            );
 
-      localStorage.setItem(
-        "student",
-        JSON.stringify(
-          response.data
-        )
-      );
+            console.log(
+              response.data
+            );
 
-      // Fetch student's attendance history
-      fetchStudentAttendance(response.data.registrationNumber);
+            // =========================
+            // INVALID LOGIN
+            // =========================
+
+            if (
+
+              response.data ===
+              "Invalid Credentials"
+
+            ) {
+
+              setMessage(
+                  "Invalid Credentials"
+              );
+
+              return;
+            }
+
+            // =========================
+            // LOGIN SUCCESS
+            // =========================
+
+            console.log(
+              response.data.registrationNumber
+            );
+
+            setMessage(
+
+              "Login Successful Welcome "
+
+              + response.data.name
+            );
+
+            setLoggedInStudent(
+              response.data
+            );
+
+            localStorage.setItem(
+
+              "student",
+
+              JSON.stringify(
+                  response.data
+              )
+            );
+
+            // =========================
+            // FETCH ATTENDANCE
+            // =========================
+
+            fetchStudentAttendance(
+
+              response.data
+                  .registrationNumber
+            );
 
     } catch (error) {
 
-      console.error(error);
+        console.error(error);
 
-      setMessage(
-        "Invalid Credentials"
-      );
+        setMessage(
+            "Login Failed"
+        );
     }
   };
 
@@ -320,7 +372,7 @@ function App() {
         const response =
           await axios.post(
 
-            "http://localhost:8082/auth/login",
+            "/api/auth/login",
 
             {
 
@@ -381,7 +433,7 @@ function App() {
       const response =
         await axios.post(
 
-          "http://localhost:8082/students/signup",
+          "/api/students/signup",
 
           signupData
         );
@@ -776,7 +828,7 @@ function App() {
         const attendanceResponse =
           await axios.post(
 
-            "http://localhost:8082/attendance/mark",
+            "/api/attendance/mark",
 
             {
 

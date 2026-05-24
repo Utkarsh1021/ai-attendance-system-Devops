@@ -46,3 +46,22 @@ Thumbs.db
 
 
 .env
+
+
+# Docker
+
+*.tar
+
+# Logs
+
+logs/
+*.log
+
+# React
+
+coverage/
+
+# Mac
+
+.AppleDouble
+.LSOverride

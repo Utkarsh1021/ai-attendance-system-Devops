@@ -51,7 +51,7 @@ function AdminDashboard() {
     const fetchAttendance = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8082/attendance",
+                "/api/attendance",
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -72,7 +72,7 @@ function AdminDashboard() {
     const fetchCount = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8082/attendance/count",
+                "/api/attendance/count",
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -90,7 +90,7 @@ function AdminDashboard() {
     const fetchStudents = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8082/students",
+                "/api/students",
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -109,7 +109,7 @@ function AdminDashboard() {
     const fetchFaculties = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8082/faculty",
+                "/api/faculty",
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -132,7 +132,7 @@ function AdminDashboard() {
 
         try {
             await axios.delete(
-                `http://localhost:8082/attendance/${id}`,
+                `/api/attendance/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -159,7 +159,7 @@ function AdminDashboard() {
 
         try {
             await axios.delete(
-                `http://localhost:8082/students/${id}`,
+                `/api/students/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("adminToken")}`
@@ -184,7 +184,7 @@ function AdminDashboard() {
 
         try {
             await axios.delete(
-                `http://localhost:8082/faculty/${id}`,
+                `/api/faculty/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("adminToken")}`

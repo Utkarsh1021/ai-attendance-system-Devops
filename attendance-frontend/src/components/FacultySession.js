@@ -51,7 +51,7 @@ const FacultySession = () => {
             try {
                 const token = localStorage.getItem("facultyToken");
                 const response = await axios.get(
-                    `http://localhost:8082/session/refresh-token?sessionId=${session.sessionId}`,
+                    `/api/session/refresh-token?sessionId=${session.sessionId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -112,7 +112,7 @@ const FacultySession = () => {
         try {
             const token = localStorage.getItem("facultyToken");
             const response = await axios.post(
-                "http://localhost:8082/session/create",
+                "/api/session/create",
                 { subject, section, facultyName },
                 {
                     headers: {

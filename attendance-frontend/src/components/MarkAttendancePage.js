@@ -80,7 +80,7 @@ const MarkAttendancePage = () => {
 
                 // Mark attendance
                 const attendanceResponse = await axios.post(
-                    "http://localhost:8082/attendance/mark",
+                    "/api/attendance/mark",
                     {
                         registrationNumber,
                         studentName: registrationNumber,
