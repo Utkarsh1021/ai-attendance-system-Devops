@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+
+  name: attendance-mysql
+
+spec:
+
+  replicas: 1
+
+  selector:
+
+    matchLabels:
+
+      app: attendance-mysql
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: attendance-mysql
+
+    spec:
+
+      containers:
+
+        - name: mysql
+
+          image: mysql:8
+
+          ports:
+
+            - containerPort: 3306
+
+          env:
+
+            - name: MYSQL_ROOT_PASSWORD
+
+              value: root
+
+            - name: MYSQL_DATABASE
+
+              value: userdb
+
+---
+
+apiVersion: v1
+
+kind: Service
+
+metadata:
+
+  name: attendance-mysql-service
+
+spec:
+
+  selector:
+
+    app: attendance-mysql
+
+  ports:
+
+    - protocol: TCP
+
+      port: 3306
+
+      targetPort: 3306
+
+  type: ClusterIP
