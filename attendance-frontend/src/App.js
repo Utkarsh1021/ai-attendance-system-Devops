@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import "./App.css";
 import AdminDashboard from "./components/AdminDashboard";
-import FacultySession from "./components/FacultySession";
-import FacultyLogin from "./components/FacultyLogin";
+//import FacultySession from "./components/FacultySession";
+//import FacultyLogin from "./components/FacultyLogin";
 import {
 
     BrowserRouter,
@@ -17,7 +17,7 @@ import {
 
 import MarkAttendancePage from "./components/MarkAttendancePage";
 
-import FacultyRegister from "./components/FacultyRegister";
+//import FacultyRegister from "./components/FacultyRegister";
 
 import FacultyAuth from "./components/FacultyAuth";
 
@@ -153,9 +153,9 @@ function App() {
   // STUDENT LIST
   // =========================
 
-  const [students,
-    setStudents]
-    = useState([]);
+  const [,
+   setStudents]
+   = useState([]);
 
   const [studentAttendance,
     setStudentAttendance]
@@ -501,19 +501,19 @@ function App() {
   // =========================
 
 
-  const handleAdminLogout =
-  () => {
+  // const handleAdminLogout =
+  // () => {
 
-    localStorage.removeItem(
-      "adminToken"
-    );
+  //   localStorage.removeItem(
+  //     "adminToken"
+  //   );
 
-    setAdminToken("");
+  //   setAdminToken("");
 
-    setMessage(
-      "Admin Logged Out"
-    );
-  };
+  //   setMessage(
+  //     "Admin Logged Out"
+  //   );
+  // };
 
   const handleLogout = () => {
 

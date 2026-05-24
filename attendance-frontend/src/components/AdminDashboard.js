@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AttendanceChart from "./AttendanceChart";
 import jsPDF from "jspdf";
@@ -8,7 +8,7 @@ import autoTable from "jspdf-autotable";
 import "../styles/AdminDashboard.css";
 
 function AdminDashboard() {
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const [attendance, setAttendance] = useState([]);
     const [totalCount, setTotalCount] = useState(0);
     const [uniqueStudents, setUniqueStudents] = useState(0);

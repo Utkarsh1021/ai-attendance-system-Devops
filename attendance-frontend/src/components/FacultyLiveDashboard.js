@@ -56,7 +56,7 @@ const FacultyLiveDashboard = ({ sessionId }) => {
     // Manual attendance marking
     const manualMarkAttendance = async () => {
         try {
-            const response = await axios.post(
+            await axios.post(
                 "/api/attendance/manual-mark",
                 {
                     registrationNumber,
