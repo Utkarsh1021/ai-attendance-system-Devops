@@ -65,3 +65,22 @@ coverage/
 
 .AppleDouble
 .LSOverride
+
+
+# AWS / Security
+*.pem
+*.sql
+
+# Docker
+docker-data/
+mysql-data/
+
+# Environment
+.env.local
+.env.production
+
+# Node
+node_modules/
+
+# Build artifacts
+dist/
