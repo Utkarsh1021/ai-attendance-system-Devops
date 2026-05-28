@@ -20,6 +20,8 @@ import MarkAttendancePage from "./components/MarkAttendancePage";
 //import FacultyRegister from "./components/FacultyRegister";
 
 import FacultyAuth from "./components/FacultyAuth";
+import QRScannerModal from "./components/QRScannerModal";
+import FaceCaptureModal from "./components/FaceCaptureModal";
 
 // Smooth scroll setup
 if (typeof window !== 'undefined') {
@@ -160,6 +162,14 @@ function App() {
   const [studentAttendance,
     setStudentAttendance]
     = useState([]);
+
+  // =========================
+  // QR SCANNING STATES
+  // =========================
+
+  const [showQRScanner, setShowQRScanner] = useState(false);
+  const [showFaceCapture, setShowFaceCapture] = useState(false);
+  const [scannedSessionData, setScannedSessionData] = useState(null);
 
   // =========================
   // CAMERA STATES
@@ -876,6 +886,29 @@ function App() {
     }
   };
 
+  // =========================
+  // QR SCANNING HANDLERS
+  // =========================
+
+  const handleQRScanSuccess = (sessionData) => {
+    setScannedSessionData(sessionData);
+    setShowQRScanner(false);
+    setShowFaceCapture(true);
+  };
+
+  const handleFaceCaptureClose = (success) => {
+    setShowFaceCapture(false);
+    setScannedSessionData(null);
+    
+    if (success) {
+      // Refresh attendance data
+      if (loggedInStudent && loggedInStudent.registrationNumber) {
+        fetchStudentAttendance(loggedInStudent.registrationNumber);
+      }
+      setMessage("Attendance marked successfully!");
+    }
+  };
+
   return (
     <BrowserRouter>
     <Routes>
@@ -1310,6 +1343,14 @@ function App() {
             <div className="profile__actions">
               <motion.button
                 className="btn btn--primary"
+                onClick={() => setShowQRScanner(true)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                📷 Scan QR & Mark Attendance
+              </motion.button>
+              <motion.button
+                className="btn btn--primary"
                 onClick={startCamera}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -1620,6 +1661,21 @@ function App() {
           </motion.div>
         </motion.section>
       )}
+
+      {/* QR Scanner Modal */}
+      <QRScannerModal
+        isOpen={showQRScanner}
+        onClose={() => setShowQRScanner(false)}
+        onScanSuccess={handleQRScanSuccess}
+      />
+
+      {/* Face Capture Modal */}
+      <FaceCaptureModal
+        isOpen={showFaceCapture}
+        onClose={handleFaceCaptureClose}
+        sessionData={scannedSessionData}
+        studentData={loggedInStudent}
+      />
     </>
     }
     />

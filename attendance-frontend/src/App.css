@@ -364,6 +364,17 @@
   flex-wrap: wrap;
 }
 
+.profile__actions .btn:first-child {
+  flex: 1 1 100%;
+  background: linear-gradient(135deg, var(--color-accent) 0%, #ff6b35 100%);
+  font-size: 1.1rem;
+  padding: 1.5rem 3rem;
+}
+
+.profile__actions .btn:first-child:hover {
+  box-shadow: 0 20px 40px rgba(255, 77, 0, 0.4);
+}
+
 /* ===================================
    STUDENTS TABLE - Asymmetric Grid
    =================================== */
