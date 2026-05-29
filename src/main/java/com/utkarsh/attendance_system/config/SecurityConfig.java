@@ -161,7 +161,9 @@ public class SecurityConfig {
 
                         "http://localhost:3000",
 
-                        "http://localhost"
+                        "http://localhost",
+
+                        "https://rajutkarsh.me"
                 )
         );
 

@@ -52,7 +52,7 @@ services:
 
     ports:
 
-      - "3000:3000"
+      - "3001:3000"
 
     networks:
 
@@ -78,7 +78,7 @@ services:
 
     ports:
 
-      - "80:80"
+      - "8085:80"
 
     volumes:
 

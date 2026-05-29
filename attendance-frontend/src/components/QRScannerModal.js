@@ -5,7 +5,7 @@ import "../styles/QRScannerModal.css";
 
 const QRScannerModal = ({ isOpen, onClose, onScanSuccess }) => {
     const scannerRef = useRef(null);
-    const [scanning, setScanning] = useState(false);
+    const [, setScanning] = useState(false);
     const [error, setError] = useState("");
 
     useEffect(() => {
