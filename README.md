@@ -685,8 +685,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Utkarsh Raj**
 
 - 📧 Email: [utkarshumang111@gmail.com](mailto:utkarshumang111@gmail.com)
-- 💼 LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [@yourusername](https://github.com/yourusername)
+- 💼 LinkedIn: [Utkarsh Raj](https://www.linkedin.com/in/utkarshraj21/)
+- 🐙 GitHub: [Utkarsh Raj](https://github.com/Utkarsh1021)
 - 🌐 Portfolio: [yourportfolio.com](https://yourportfolio.com)
 
 ---
