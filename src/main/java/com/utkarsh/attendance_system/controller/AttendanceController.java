@@ -24,7 +24,7 @@ import com.utkarsh.attendance_system.repository.AttendanceSessionRepository;
 
 @RestController
 
-@RequestMapping("/attendance")
+@RequestMapping("/api/attendance")
 
 @CrossOrigin(origins = "*")
 

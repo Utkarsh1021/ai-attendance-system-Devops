@@ -87,25 +87,26 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(
+                        // .requestMatchers(
 
-                                "/auth/**",
+                        //         "/auth/**",
 
-                                "/students/**",
+                        //         "/students/**",
 
-                                "/faculty/login",
+                        //         "/faculty/login",
 
-                                "/faculty/register",
+                        //         "/faculty/register",
 
-                                "/attendance/**",
+                        //         "/attendance/**",
 
-                                "/session/**"
+                        //         "/session/**"
 
-                        ).permitAll()
+                        // ).permitAll()
 
-                        .anyRequest()
+                        // .anyRequest()
 
-                        .authenticated()
+                        //.authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 // =========================
@@ -160,6 +161,10 @@ public class SecurityConfig {
                 List.of(
 
                         "http://localhost:3000",
+
+                        "http://localhost:3001",
+
+                        "http://localhost:8085",
 
                         "http://localhost",
 

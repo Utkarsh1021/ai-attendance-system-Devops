@@ -458,7 +458,7 @@ function App() {
 
       await axios.post(
 
-        "http://localhost:5000/register-face",
+        "/api/face/register",
 
         {
 
@@ -807,7 +807,7 @@ function App() {
       const recognizeResponse =
         await axios.post(
 
-          "http://localhost:5000/recognize-face",
+          "/api/face/recognize",
 
           {
             image: imageData

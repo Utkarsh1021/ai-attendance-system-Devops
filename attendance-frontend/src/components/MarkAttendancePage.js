@@ -71,7 +71,7 @@ const MarkAttendancePage = () => {
 
             // Recognize face
             const recognizeResponse = await axios.post(
-                "http://localhost:5000/recognize-face",
+                "/api/face/recognize",
                 { image: imageData }
             );
 

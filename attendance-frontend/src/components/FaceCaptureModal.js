@@ -72,7 +72,7 @@ const FaceCaptureModal = ({ isOpen, onClose, sessionData, studentData }) => {
             // Step 1: Recognize face
             setMessage("Recognizing face...");
             const recognizeResponse = await axios.post(
-                "http://localhost:5000/recognize-face",
+                "/api/face/recognize",
                 { image: imageData }
             );
 

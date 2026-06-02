@@ -298,7 +298,7 @@ const FacultySession = () => {
                                                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                                             >
                                                 <QRCode
-                                                    value={`http://localhost:3000/mark-attendance?sessionId=${session.sessionId}&token=${session.qrToken}`}
+                                                    value={`${window.location.origin}/mark-attendance?sessionId=${session.sessionId}&token=${session.qrToken}`}
                                                     size={280}
                                                     bgColor="#1a1a1a"
                                                     fgColor="#fafaf9"

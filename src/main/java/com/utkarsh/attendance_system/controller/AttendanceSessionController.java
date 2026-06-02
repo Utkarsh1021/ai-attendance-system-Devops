@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 
-@RequestMapping("/session")
+@RequestMapping("/api/session")
 
 @CrossOrigin(origins = "*")
 

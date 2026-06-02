@@ -3,6 +3,7 @@ import numpy as np
 import os
 import base64
 
+
 from flask import (
     Flask,
     request,
@@ -191,7 +192,7 @@ def register_face():
 
             "error": str(e)
 
-        })
+        }), 500
 
 
 # =========================
@@ -389,7 +390,7 @@ def recognize_face_api():
 
             "error": str(e)
 
-        })
+        }), 500
 
 
 # =========================

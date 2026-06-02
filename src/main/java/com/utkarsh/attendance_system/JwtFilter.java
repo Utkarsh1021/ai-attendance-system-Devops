@@ -49,23 +49,23 @@ public class JwtFilter
 
         if (
 
-                path.startsWith("/students")
+                path.startsWith("/api/students")
 
                 ||
 
-                path.startsWith("/attendance")
+                path.startsWith("/api/attendance")
 
                 ||
 
-                path.startsWith("/faculty/login")
+                path.startsWith("/api/faculty/login")
 
                 ||
 
-                path.startsWith("/faculty/register")
+                path.startsWith("/api/faculty/register")
 
                 ||
 
-                path.startsWith("/auth")
+                path.startsWith("/api/auth")
 
         ) {
 
