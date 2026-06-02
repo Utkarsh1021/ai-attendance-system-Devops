@@ -81,21 +81,17 @@ Login → Create Session → Generate QR Code → Monitor Live Attendance → Ex
 
 | Landing Page | Student Dashboard | QR Scanner |
 |:---:|:---:|:---:|
-| ![Landing](<img width="1902" height="1024" alt="Screenshot 2026-06-01 144529" src="https://github.com/user-attachments/assets/416d5c17-e5d4-4588-8aad-ecf4a44e2028" />
-) | ![Role - Dashboard](<img width="1902" height="1029" alt="Screenshot 2026-06-02 152215" src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" />
-)  | ![Student Login](<img width="1902" height="1029" alt="Screenshot 2026-06-02 152215" src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" />
-)
-| ![QR](<img width="1888" height="1026" alt="Screenshot 2026-06-02 152647" src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" />
-) |
-![Super Admin](<img width="1888" height="1026" alt="Screenshot 2026-06-02 152647" src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" />
-)
+| ![Landing](<img width="1902" height="1024" alt="Screenshot 2026-06-01 144529" src="https://github.com/user-attachments/assets/416d5c17-e5d4-4588-8aad-ecf4a44e2028" />) 
+| ![Role - Dashboard](<img width="1902" height="1029" alt="Screenshot 2026-06-02 152215" src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" />)  
+| ![Student Login](<img width="1902" height="1029" alt="Screenshot 2026-06-02 152215" src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" />)
+| ![QR](<img width="1888" height="1026" alt="Screenshot 2026-06-02 152647" src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" />) 
+| ![Super Admin](<img width="1888" height="1026" alt="Screenshot 2026-06-02 152647" src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" />)
 
 | Face Verification | Faculty Dashboard | Analytics |
 |:---:|:---:|:---:|
-| ![Face](<img width="2764" height="1504" alt="Gemini_Generated_Image_ax587ax587ax587a" src="https://github.com/user-attachments/assets/f47fad20-19ba-460d-9ebd-3fc084248dc6" />
-) | ![Faculty](<img width="1892" height="1028" alt="Screenshot 2026-06-02 153124" src="https://github.com/user-attachments/assets/80236788-2c22-4080-a0fa-f010dcb708d6" />
-) | ![Analytics](<img width="1894" height="1027" alt="Screenshot 2026-06-02 152954" src="https://github.com/user-attachments/assets/cb8da3ed-457a-4c6f-92fc-a0e1f6c03400" />
-) |
+| ![Face](<img width="2764" height="1504" alt="Gemini_Generated_Image_ax587ax587ax587a" src="https://github.com/user-attachments/assets/f47fad20-19ba-460d-9ebd-3fc084248dc6" />)
+| ![Faculty](<img width="1892" height="1028" alt="Screenshot 2026-06-02 153124" src="https://github.com/user-attachments/assets/80236788-2c22-4080-a0fa-f010dcb708d6" />)
+| ![Analytics](<img width="1894" height="1027" alt="Screenshot 2026-06-02 152954" src="https://github.com/user-attachments/assets/cb8da3ed-457a-4c6f-92fc-a0e1f6c03400" />) |
 
 </div>
 
