@@ -90,7 +90,7 @@ Login → Create Session → Generate QR Code → Monitor Live Attendance → Ex
 <br><br>
 
 ### Student Dashboard
-<img src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" alt="Student Dashboard" width="100%">
+<img src="https://github.com/user-attachments/assets/b78e967b-b943-46b7-8d52-461c043f1eff" alt="Student Dashboard" width="100%">
 
 <br><br>
 
@@ -100,7 +100,7 @@ Login → Create Session → Generate QR Code → Monitor Live Attendance → Ex
 <br><br>
 
 ### Super Admin Dashboard
-<img src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" alt="Super Admin Dashboard" width="100%">
+<img src="https://github.com/user-attachments/assets/ec2b7420-3606-4ad2-811e-226136db3273" alt="Super Admin Dashboard" width="100%">
 
 <br><br>
 
