@@ -75,32 +75,49 @@ Login → Dashboard → Scan QR Code → Face Verification → Attendance Marked
 Login → Create Session → Generate QR Code → Monitor Live Attendance → Export Report
 ```
 
-### Screenshots
+## Screenshots
 
 <div align="center">
 
-| Landing Page |
-| ![Landing](<img width="1902" height="1024" alt="Screenshot 2026-06-01 144529" src="https://github.com/user-attachments/assets/416d5c17-e5d4-4588-8aad-ecf4a44e2028" />) 
-| ![Role - Dashboard](<img width="1902" height="1029" alt="Screenshot 2026-06-02 152215" src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" />)  
+### Landing Page
+<img src="https://github.com/user-attachments/assets/416d5c17-e5d4-4588-8aad-ecf4a44e2028" alt="Landing Page" width="100%">
 
-| Student Dashboard |
-| ![Student Login](<img width="1902" height="1029" alt="Screenshot 2026-06-02 152215" src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" />)
+<br><br>
 
-| QR Scanner |
-| ![QR](<img width="1888" height="1026" alt="Screenshot 2026-06-02 152647" src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" />) 
-| ![Super Admin](<img width="1888" height="1026" alt="Screenshot 2026-06-02 152647" src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" />)
+### Role Dashboard
+<img src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" alt="Role Dashboard" width="100%">
 
-| Face Verification | 
-| ![Face](<img width="2764" height="1504" alt="Gemini_Generated_Image_ax587ax587ax587a" src="https://github.com/user-attachments/assets/f47fad20-19ba-460d-9ebd-3fc084248dc6" />)
+<br><br>
 
-| Faculty Dashboard | 
-| ![Faculty](<img width="1892" height="1028" alt="Screenshot 2026-06-02 153124" src="https://github.com/user-attachments/assets/80236788-2c22-4080-a0fa-f010dcb708d6" />)
+### Student Dashboard
+<img src="https://github.com/user-attachments/assets/80f9ff8f-915a-43e4-b16e-66401967e471" alt="Student Dashboard" width="100%">
 
-| Analytics |
-| ![Analytics](<img width="1894" height="1027" alt="Screenshot 2026-06-02 152954" src="https://github.com/user-attachments/assets/cb8da3ed-457a-4c6f-92fc-a0e1f6c03400" />) |
+<br><br>
+
+### QR Scanner
+<img src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" alt="QR Scanner" width="100%">
+
+<br><br>
+
+### Super Admin Dashboard
+<img src="https://github.com/user-attachments/assets/9eb56713-c160-4a1e-8d1d-3b2405b43aeb" alt="Super Admin Dashboard" width="100%">
+
+<br><br>
+
+### Face Verification
+<img src="https://github.com/user-attachments/assets/f47fad20-19ba-460d-9ebd-3fc084248dc6" alt="Face Verification" width="100%">
+
+<br><br>
+
+### Faculty Dashboard
+<img src="https://github.com/user-attachments/assets/80236788-2c22-4080-a0fa-f010dcb708d6" alt="Faculty Dashboard" width="100%">
+
+<br><br>
+
+### Analytics Dashboard
+<img src="https://github.com/user-attachments/assets/cb8da3ed-457a-4c6f-92fc-a0e1f6c03400" alt="Analytics Dashboard" width="100%">
 
 </div>
-
 ---
 
 ## 🏗️ Architecture
